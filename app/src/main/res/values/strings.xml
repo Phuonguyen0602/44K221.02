@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">LIM</string>
+    <string name="app_description">Start keeping track of the expiration date of your products</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="not_have_account">Don\'t have an account?</string>
+    <string name="contact_us_via">Contact us via</string>
+    <string name="create_account">Create account</string>
+    <string name="enter_your_name_here">Enter your name here</string>
+    <string name="enter_your_email_here">Enter your email here</string>
+    <string name="enter_your_password_here">Enter your password here</string>
+    <string name="or">or</string>
+    <string name="sign_up_with">Sign up with</string>
+    <string name="sign_in_with">Sign in with</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="welcome_back">Welcome back</string>
+    <string name="skip_sign_in">Skip for now</string>
+</resources>

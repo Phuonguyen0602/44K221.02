@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.ecdue.lim.viewmodels.WelcomeViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background"
+        tools:context=".activities.WelcomeActivity">
+
+        <ImageView
+            android:id="@+id/img_welcome_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/app_logo"
+            app:layout_constraintBottom_toTopOf="@+id/txt_welcome_app_des"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_welcome_app_name"
+            app:layout_constraintVertical_chainStyle="spread_inside" />
+
+        <TextView
+            android:id="@+id/txt_welcome_app_name"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:fontFamily="@font/dancing_script_bold"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+            android:textColor="#105A4F"
+            android:textSize="43sp"
+            app:layout_constraintBottom_toTopOf="@+id/img_welcome_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+        <TextView
+            android:id="@+id/txt_welcome_app_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/quicksand_bold"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:text="@string/app_description"
+            android:textAlignment="center"
+            android:textColor="#10594F"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/layout_welcome_buttons"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_welcome_logo"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_welcome_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/txt_welcome_skip"
+            app:layout_constraintTop_toBottomOf="@+id/txt_welcome_app_des">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_welcome_sign_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/button_solid"
+                android:fontFamily="@font/quicksand_bold"
+                android:onClick="@{() -> viewModel.onSignUpClicked()}"
+                android:text="@string/sign_up"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="spread" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_welcome_sign_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/button_transparent"
+                android:fontFamily="@font/quicksand_bold"
+                android:onClick="@{()->viewModel.onSignInClicked()}"
+                android:text="@string/sign_in"
+                android:textAllCaps="false"
+                android:textColor="#10594F"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_welcome_sign_up"
+                app:layout_constraintVertical_bias="0.13"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:onClick="@{()->viewModel.onSkipClicked()}"
+            android:background="@drawable/transparent_rectangle_button"
+            android:backgroundTint="@color/white"
+            android:textAllCaps="false"
+            android:id="@+id/txt_welcome_skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_bold"
+            android:text="@string/skip_sign_in"
+            android:textColor="#10594F"
+            android:textSize="17sp"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_welcome_buttons" />
+        <!--
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/txt_welcome_skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_welcome_buttons">
+
+
+
+            <ImageView
+                android:id="@+id/img_welcome_zalo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/icon_zalo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/img_welcome_facebook"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.829" />
+
+            <ImageView
+                android:id="@+id/img_welcome_facebook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/icon_facebook"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/img_welcome_zalo"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/txt_welcome_contact"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.828" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        -->
+
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

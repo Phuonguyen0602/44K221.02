@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.ecdue.lim.viewmodels.SignInViewModel" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".activities.SignInActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background"
+        tools:context=".activities.SignInActivity">
+
+        <ImageView
+            android:id="@+id/img_signin_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="68dp"
+            app:layout_constraintBottom_toTopOf="@+id/txt_signin_des"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread"
+            app:srcCompat="@drawable/app_logo_small" />
+
+        <TextView
+            android:id="@+id/txt_signin_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/quicksand_bold"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:text="@string/welcome_back"
+            android:textAlignment="center"
+            android:textColor="#10594F"
+            android:textSize="23sp"
+            app:layout_constraintBottom_toTopOf="@+id/layout_signin_inputs"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_signin_logo" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_signin_inputs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/btn_sign_in"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_signin_des">
+
+            <EditText
+                android:id="@+id/edt_signin_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:background="@drawable/edit_text_background"
+                android:ems="10"
+                android:gravity="start|center"
+                android:hint="@string/enter_your_email_here"
+                android:inputType="textEmailAddress"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edt_signup_name" />
+
+            <EditText
+                android:id="@+id/edt_signin_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/edit_text_background"
+                android:ems="10"
+                android:gravity="start|center"
+                android:hint="@string/enter_your_password_here"
+                android:inputType="textPassword"
+                android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.504"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edt_signin_email"
+                app:layout_constraintVertical_bias="0.029" />
+
+            <TextView
+                android:id="@+id/txt_signin_forgot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="132dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/quicksand"
+                android:text="@string/forgot_password"
+                android:textAlignment="center"
+                android:textColor="#10594F"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/edt_signin_password"
+                app:layout_constraintStart_toStartOf="@+id/edt_signin_password"
+                app:layout_constraintTop_toBottomOf="@+id/edt_signin_password" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_sign_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/button_solid"
+            android:fontFamily="@font/quicksand_bold"
+            android:text="@string/sign_in"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toTopOf="@+id/txt_signin_or"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_signin_inputs" />
+
+        <TextView
+            android:id="@+id/txt_signin_or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand"
+            android:text="@string/or"
+            android:textAlignment="center"
+            android:textColor="#10594F"
+            android:textSize="23sp"
+            app:layout_constraintBottom_toTopOf="@+id/layout_signin_google_option"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@+id/btn_sign_in" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_signin_google_option"
+            android:background="@drawable/transparent_rectangle_button"
+            android:backgroundTint="@color/white"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/txt_signin_no_account"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_signin_or">
+
+            <TextView
+                android:id="@+id/txt_signin_google"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/quicksand_bold"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:text="@string/sign_in_with"
+                android:textAlignment="center"
+                android:textColor="#10594F"
+                android:textSize="23sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/img_signin_google"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/img_signin_google"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/txt_signin_google"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/icons8_google" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:background="@drawable/transparent_rectangle_button"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/white"
+            android:onClick="@{()->viewModel.onNoAccountPressed()}"
+            android:id="@+id/txt_signin_no_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/quicksand"
+            android:text="@string/not_have_account"
+            android:textAlignment="center"
+            android:textColor="#10594F"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_signin_google_option" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:background="@drawable/round_back_button"
+            android:backgroundTint="@color/white"
+            android:onClick="@{()->viewModel.onBackPressed()}"
+            android:id="@+id/img_signin_back"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
