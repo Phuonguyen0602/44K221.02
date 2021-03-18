@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -39,6 +40,11 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 
     implementation 'com.google.dagger:hilt-android:2.33-beta'
+    implementation 'com.google.firebase:firebase-auth:20.0.3'
+    implementation 'androidx.navigation:navigation-fragment:2.3.3'
+    implementation 'androidx.navigation:navigation-ui:2.3.3'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0'
     annotationProcessor 'com.google.dagger:hilt-compiler:2.33-beta'
 
     implementation 'androidx.appcompat:appcompat:1.2.0'

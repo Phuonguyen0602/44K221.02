@@ -93,13 +93,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edt_signin_email"
                 app:layout_constraintVertical_bias="0.029" />
-
+            <TextView
+                android:id="@+id/txt_signin_error_mess"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="textStart"
+                android:textColor="#FB4D3D"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edt_signin_password" />
             <TextView
                 android:id="@+id/txt_signin_forgot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="132dp"
-                android:layout_marginTop="8dp"
                 android:fontFamily="@font/quicksand"
                 android:text="@string/forgot_password"
                 android:textAlignment="center"
@@ -107,14 +114,15 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="@+id/edt_signin_password"
                 app:layout_constraintStart_toStartOf="@+id/edt_signin_password"
-                app:layout_constraintTop_toBottomOf="@+id/edt_signin_password" />
+                app:layout_constraintTop_toBottomOf="@+id/txt_signin_error_mess" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:onClick="@{()->viewModel.onSignInPressed()}"
             android:id="@+id/btn_sign_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:background="@drawable/button_solid"
             android:fontFamily="@font/quicksand_bold"
             android:text="@string/sign_in"
