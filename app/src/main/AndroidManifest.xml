@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ecdue.lim">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:name=".LimApplication"
         android:allowBackup="true"
@@ -11,12 +13,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LIM">
+        <activity android:name=".activities.MedicineActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.CosmeticCategoryActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.FoodCategoryActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/title_activity_main"></activity>
-        <activity android:name=".activities.SignUpActivity" />
-        <activity android:name=".activities.SignInActivity" />
-        <activity android:name=".activities.WelcomeActivity">
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_main" />
+        <activity android:name=".activities.SignUpActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.SignInActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.WelcomeActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

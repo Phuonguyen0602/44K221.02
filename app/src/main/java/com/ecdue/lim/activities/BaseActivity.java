@@ -1,5 +1,7 @@
 package com.ecdue.lim.activities;
 
+import android.content.Intent;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -14,5 +16,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onStop(){
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+    protected  <T extends Class> void loadActivity(T c){
+        Intent intent = new Intent(getApplicationContext(), c);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

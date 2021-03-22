@@ -10,7 +10,9 @@ import androidx.lifecycle.Transformations;
 
 import com.ecdue.lim.events.BackButtonClicked;
 import com.ecdue.lim.events.SignInButtonClicked;
+import com.ecdue.lim.events.SignInGoogleClicked;
 import com.ecdue.lim.events.SignUpButtonClicked;
+import com.ecdue.lim.events.SignUpGoogleClicked;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.greenrobot.eventbus.EventBus;
@@ -86,6 +88,6 @@ public class SignUpViewModel extends BaseViewModel {
         EventBus.getDefault().post(new SignUpButtonClicked(""));
     }
     public void onGoogleSignUpPressed(){
-
+        EventBus.getDefault().post(new SignInGoogleClicked(""));
     }
 }

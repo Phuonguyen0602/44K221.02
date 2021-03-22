@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
 import com.ecdue.lim.R;
@@ -15,6 +16,9 @@ import com.ecdue.lim.events.SignInButtonClicked;
 import com.ecdue.lim.events.SignUpButtonClicked;
 import com.ecdue.lim.events.SkipSignInButtonClicked;
 import com.ecdue.lim.viewmodels.WelcomeViewModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -22,6 +26,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class WelcomeActivity extends BaseActivity {
     public static final String TAG = WelcomeActivity.class.getSimpleName();
+    public static final String SHOULD_FINISH = "SHOULD_FINISH";
     private FirebaseAuth auth;
     private ActivityWelcomeBinding binding;
     private WelcomeViewModel viewModel;
@@ -36,12 +41,15 @@ public class WelcomeActivity extends BaseActivity {
 
         auth = FirebaseAuth.getInstance();
         //TODO: Check session (guest or signed in)
+        if (getIntent() != null){
+            if (getIntent().getBooleanExtra(SHOULD_FINISH, false))
+                finish();
+        }
     }
     @Override
     protected void onStart(){
         super.onStart();
         if (auth.getCurrentUser() != null){
-            Toast.makeText(this, "Already signed in", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
@@ -52,8 +60,6 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onStop(){
         super.onStop();
-        Log.d(TAG, "Sign out");
-        auth.signOut();
         // For debugging
     }
     //endregion
@@ -74,9 +80,22 @@ public class WelcomeActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSkipSignInOption(SkipSignInButtonClicked message){
         // Called when user clicks "Skip for now" button
+        auth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    loadActivity(MainActivity.class);
+                    Log.d(TAG, "Anonymous user id: " + auth.getCurrentUser().getUid());
+                }
+                else
+                    makeToast(task.getException().getLocalizedMessage());
+            }
+        });
     }
     //endregion
-
+    private void makeToast(String m){
+        Toast.makeText(this, m, Toast.LENGTH_SHORT).show();
+    }
     private void playAnimationOnClick(View v){
         v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_scale));
         v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_down));

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.ecdue.lim.events.BackButtonClicked;
 import com.ecdue.lim.events.SignInButtonClicked;
+import com.ecdue.lim.events.SignInGoogleClicked;
 import com.ecdue.lim.events.SignUpButtonClicked;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,5 +39,8 @@ public class SignInViewModel extends ViewModel {
     }
     public void onSignInPressed(){
         EventBus.getDefault().post(new SignInButtonClicked(""));
+    }
+    public void onSignInGoogleClicked(){
+        EventBus.getDefault().post(new SignInGoogleClicked(""));
     }
 }

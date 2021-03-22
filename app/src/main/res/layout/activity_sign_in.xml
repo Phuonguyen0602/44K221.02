@@ -153,6 +153,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_signin_google_option"
+            android:onClick="@{()->viewModel.onSignInGoogleClicked()}"
             android:background="@drawable/transparent_rectangle_button"
             android:backgroundTint="@color/white"
             android:clickable="true"

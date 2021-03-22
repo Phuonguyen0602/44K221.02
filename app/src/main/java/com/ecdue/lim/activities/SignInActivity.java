@@ -1,5 +1,6 @@
 package com.ecdue.lim.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,7 +8,10 @@ import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
@@ -15,7 +19,9 @@ import com.ecdue.lim.R;
 import com.ecdue.lim.databinding.ActivitySignInBinding;
 import com.ecdue.lim.events.BackButtonClicked;
 import com.ecdue.lim.events.SignInButtonClicked;
+import com.ecdue.lim.events.SignInGoogleClicked;
 import com.ecdue.lim.events.SignUpButtonClicked;
+import com.ecdue.lim.utils.GoogleSignInUtils;
 import com.ecdue.lim.viewmodels.SignInViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,12 +30,17 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
+
 public class SignInActivity extends BaseActivity {
     public static final String TAG = SignInActivity.class.getSimpleName();
     private ActivitySignInBinding binding;
     private SignInViewModel viewModel;
     private FirebaseAuth auth;
     private Handler handler;
+    private GoogleSignInUtils googleSignInUtils;
+    private ActivityResultLauncher<Intent> googleSignInLauncher;
     //region lifecycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +50,53 @@ public class SignInActivity extends BaseActivity {
         binding.setViewModel(viewModel);
 
         auth = FirebaseAuth.getInstance();
+        prepareForGoogleSignIn();
+        
+    }
+    private void prepareForGoogleSignIn(){
+        googleSignInUtils = new GoogleSignInUtils(this, auth);
+        googleSignInUtils.initialize();
+        googleSignInLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK){
+                        googleSignInUtils.firebaseAuth(result.getData(), new Observer<Boolean>() {
+                            @Override
+                            public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(@io.reactivex.rxjava3.annotations.NonNull Boolean success) {
+                                if (success){
+                                    googleSignInSuccessfully();
+                                }
+                            }
+
+                            @Override
+                            public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+                    }
+                }
+        );
+    }
+    private void googleSignInSuccessfully(){
+        Log.d(TAG, "Sign in with google successfully!");
+        Log.d(TAG, (auth.getCurrentUser() != null ? auth.getCurrentUser().getEmail() : "Google fail"));
+        loadActivity(MainActivity.class);
+    }
+    private void googleSignUpFailed(){
+        Toast.makeText(this, "Google authentication failed", Toast.LENGTH_SHORT).show();
     }
     //endregion
-    private <T extends Class> void loadActivity(T c){
-        Intent intent = new Intent(getApplicationContext(), c);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-    }
+
     //region Event handling
     @Subscribe
     public void onBackButtonClicked(BackButtonClicked event){
@@ -88,6 +139,11 @@ public class SignInActivity extends BaseActivity {
             binding.edtSigninEmail.setError(viewModel.emailValidation(email));
             binding.edtSigninPassword.setError(viewModel.passwordValidation(password));
         }
+    }
+
+    @Subscribe
+    public void onSignInGoogleClicked(SignInGoogleClicked event){
+        googleSignInLauncher.launch(googleSignInUtils.getSignInIntent());
     }
     //endregion
 

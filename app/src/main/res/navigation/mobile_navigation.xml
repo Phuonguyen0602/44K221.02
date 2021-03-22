@@ -12,14 +12,19 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.ecdue.lim.fragments.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_scan"
+        android:name="com.ecdue.lim.fragments.ScanFragment"
+        android:label="@string/title_scan"
+        tools:layout="@layout/fragment_scan" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.ecdue.lim.fragments.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_storage"
+        android:name="com.ecdue.lim.fragments.StorageFragment"
+        android:label="@string/title_storage"
+        tools:layout="@layout/fragment_storage" />
+    <fragment
+        android:id="@+id/navigation_account"
+        android:name="com.ecdue.lim.fragments.AccountFragment"
+        android:label="@string/title_account"
+        tools:layout="@layout/fragment_account" />
 </navigation>

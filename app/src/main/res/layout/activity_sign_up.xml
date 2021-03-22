@@ -153,6 +153,7 @@
             app:layout_constraintTop_toBottomOf="@+id/btn_sign_up" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:onClick="@{()->viewModel.onGoogleSignUpPressed()}"
             android:id="@+id/layout_signup_google_option"
             android:background="@drawable/transparent_rectangle_button"
             android:backgroundTint="@color/white"
