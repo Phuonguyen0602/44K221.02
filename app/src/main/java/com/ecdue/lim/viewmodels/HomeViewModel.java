@@ -32,6 +32,7 @@ public class HomeViewModel extends ViewModel {
         DatabaseHelper.getInstance().getMedicineQuantity(medicineNumber);
     }
 
+    // MainActivity handles this
     public void onFoodCategoryClicked(){
         EventBus.getDefault().post(new LoadActivityEvent(FoodCategoryActivity.class));
     }

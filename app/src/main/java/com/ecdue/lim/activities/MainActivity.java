@@ -1,5 +1,7 @@
 package com.ecdue.lim.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +14,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.ecdue.lim.R;
 import com.ecdue.lim.events.LoadActivityEvent;
+import com.ecdue.lim.events.ShowAddItemDialog;
 import com.ecdue.lim.events.SignOutEvent;
 import com.ecdue.lim.utils.GoogleSignInUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -58,13 +61,17 @@ public class MainActivity extends BaseActivity {
         googleSignInUtils.getSignInClient().signOut();
         loadActivity(WelcomeActivity.class);
     }
+    // Event from AccountViewModel
     @Subscribe
     public void onSignOutEvent(SignOutEvent event){
         Log.d(TAG, "Signing out");
         signOut();
     }
+    // Event from HomeViewModel
     @Subscribe
     public void onLoadActivityEvent(LoadActivityEvent event){
         loadActivity(event.getaClass());
     }
+
+
 }

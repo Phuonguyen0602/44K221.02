@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class Product {
     private String name;
-    private int quantity;
+    private float quantity;
     private String unit;
     private String category;
     private long expire;
@@ -13,6 +13,30 @@ public class Product {
     private String barcode;
     private boolean toBeNotified;
     private boolean isExpire;
+
+    public Product(String name, float quantity, String unit, String category, long expire, String imageUrl, String barcode, boolean toBeNotified, boolean isExpire) {
+        this.name = name;
+        this.quantity = quantity;
+        this.unit = unit;
+        this.category = category;
+        this.expire = expire;
+        this.imageUrl = imageUrl;
+        this.barcode = barcode;
+        this.toBeNotified = toBeNotified;
+        this.isExpire = isExpire;
+    }
+
+    public Product(){
+        this.name = "";
+        this.quantity = 0f;
+        this.unit = "";
+        this.category = "";
+        this.expire = 0;
+        this.imageUrl = "";
+        this.barcode = "";
+        this.toBeNotified = false;
+        this.isExpire = false;
+    }
 
     public HashMap<String, Object> toHashMap() throws IllegalAccessException {
         HashMap<String, Object> result = new HashMap<>();
@@ -31,11 +55,11 @@ public class Product {
         this.name = name;
     }
 
-    public int getQuantity() {
+    public float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
 

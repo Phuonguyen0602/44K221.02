@@ -125,50 +125,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout_welcome_buttons" />
-        <!--
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/txt_welcome_skip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_welcome_buttons">
-
-
-
-            <ImageView
-                android:id="@+id/img_welcome_zalo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/icon_zalo"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/img_welcome_facebook"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.829" />
-
-            <ImageView
-                android:id="@+id/img_welcome_facebook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/icon_facebook"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/img_welcome_zalo"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/txt_welcome_contact"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.828" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        -->
-
-
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
