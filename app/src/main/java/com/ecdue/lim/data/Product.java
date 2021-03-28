@@ -2,19 +2,20 @@ package com.ecdue.lim.data;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Product {
     private String name;
-    private float quantity;
+    private double quantity;
     private String unit;
     private String category;
     private long expire;
     private String imageUrl;
     private String barcode;
     private boolean toBeNotified;
-    private boolean isExpire;
+    private boolean isExpired;
 
-    public Product(String name, float quantity, String unit, String category, long expire, String imageUrl, String barcode, boolean toBeNotified, boolean isExpire) {
+    public Product(String name, float quantity, String unit, String category, long expire, String imageUrl, String barcode, boolean toBeNotified, boolean isExpired) {
         this.name = name;
         this.quantity = quantity;
         this.unit = unit;
@@ -23,19 +24,19 @@ public class Product {
         this.imageUrl = imageUrl;
         this.barcode = barcode;
         this.toBeNotified = toBeNotified;
-        this.isExpire = isExpire;
+        this.isExpired = isExpired;
     }
 
     public Product(){
         this.name = "";
-        this.quantity = 0f;
+        this.quantity = 0;
         this.unit = "";
         this.category = "";
         this.expire = 0;
         this.imageUrl = "";
         this.barcode = "";
         this.toBeNotified = false;
-        this.isExpire = false;
+        this.isExpired = false;
     }
 
     public HashMap<String, Object> toHashMap() throws IllegalAccessException {
@@ -46,6 +47,17 @@ public class Product {
         }
         return result;
     }
+    public static Product mapToProduct(Map<String, Object> map) {
+        Product product = new Product();
+        product.setName((String) map.get("name"));
+        product.setQuantity((Double) map.get("quantity"));
+        product.setUnit((String) map.get("unit"));
+        product.setCategory((String) map.get("category"));
+        product.setExpire((Long) map.get("expire"));
+        product.setImageUrl((String) map.get("imageUrl"));
+        product.setBarcode((String) map.get("barcode"));
+        return product;
+    }
 
     public String getName() {
         return name;
@@ -55,11 +67,11 @@ public class Product {
         this.name = name;
     }
 
-    public float getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(float quantity) {
+    public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
 
@@ -83,8 +95,8 @@ public class Product {
         return expire;
     }
 
-    public void setExpire(long expire) {
-        this.expire = expire;
+    public void setExpire(long expired) {
+        this.expire = expired;
     }
 
     public String getImageUrl() {
@@ -111,11 +123,11 @@ public class Product {
         this.toBeNotified = toBeNotified;
     }
 
-    public boolean isExpire() {
-        return isExpire;
+    public boolean isExpired() {
+        return isExpired;
     }
 
-    public void setExpire(boolean expire) {
-        isExpire = expire;
+    public void setExpired(boolean expire) {
+        isExpired = expire;
     }
 }

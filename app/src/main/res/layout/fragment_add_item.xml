@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.ecdue.lim.viewmodels.AddItemFragmentViewModel" />
+            type="com.ecdue.lim.features.add_item.AddItemFragmentViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="wrap_content"

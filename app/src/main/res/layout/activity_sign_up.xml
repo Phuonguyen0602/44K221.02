@@ -5,14 +5,14 @@
     <data>
         <variable
             name="viewModel"
-            type="com.ecdue.lim.viewmodels.SignUpViewModel" />
+            type="com.ecdue.lim.features.authentication.signup.SignUpViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background"
-        tools:context=".activities.SignInActivity">
+        tools:context=".features.authentication.signin.SignInActivity">
 
         <ImageView
             android:id="@+id/img_signup_logo"

@@ -5,19 +5,19 @@
     <data>
         <variable
             name="viewModel"
-            type="com.ecdue.lim.viewmodels.SignInViewModel" />
+            type="com.ecdue.lim.features.authentication.signin.SignInViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".activities.SignInActivity">
+    tools:context=".features.authentication.signin.SignInActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background"
-        tools:context=".activities.SignInActivity">
+        tools:context=".features.authentication.signin.SignInActivity">
 
         <ImageView
             android:id="@+id/img_signin_logo"

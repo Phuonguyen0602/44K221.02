@@ -5,12 +5,12 @@
     <data>
         <variable
             name="viewModel"
-            type="com.ecdue.lim.viewmodels.StorageViewModel" />
+            type="com.ecdue.lim.features.main_screen.StorageViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.StorageFragment">
+    tools:context=".features.main_screen.StorageFragment">
 
     <EditText
         android:id="@+id/edt_add_name"

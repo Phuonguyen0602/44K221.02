@@ -5,12 +5,12 @@
     <data>
         <variable
             name="viewModel"
-            type="com.ecdue.lim.viewmodels.ScanViewModel" />
+            type="com.ecdue.lim.features.main_screen.ScanViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ScanFragment">
+    tools:context=".features.main_screen.ScanFragment">
 
     <Button
         android:id="@+id/button"

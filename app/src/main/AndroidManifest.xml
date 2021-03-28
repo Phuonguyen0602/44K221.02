@@ -13,21 +13,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LIM">
-        <activity android:name=".activities.MedicineActivity"
+        <activity android:name=".features.medicines_storage.MedicineActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.CosmeticCategoryActivity"
+        <activity android:name=".features.cosmetics_storage.CosmeticCategoryActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.FoodCategoryActivity"
+        <activity android:name=".features.foods_storage.FoodCategoryActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".features.main_screen.MainActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_main" />
-        <activity android:name=".activities.SignUpActivity"
+        <activity android:name=".features.authentication.signup.SignUpActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.SignInActivity"
+        <activity android:name=".features.authentication.signin.SignInActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.WelcomeActivity"
+        <activity android:name=".features.authentication.welcome.WelcomeActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

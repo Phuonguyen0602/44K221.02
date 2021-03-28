@@ -6,14 +6,14 @@
     <data>
         <variable
             name="viewModel"
-            type="com.ecdue.lim.viewmodels.WelcomeViewModel" />
+            type="com.ecdue.lim.features.authentication.welcome.WelcomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background"
-        tools:context=".activities.WelcomeActivity">
+        tools:context=".features.authentication.welcome.WelcomeActivity">
 
         <ImageView
             android:id="@+id/img_welcome_logo"

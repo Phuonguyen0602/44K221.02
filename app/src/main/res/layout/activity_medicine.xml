@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MedicineActivity">
+    tools:context=".features.medicines_storage.MedicineActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

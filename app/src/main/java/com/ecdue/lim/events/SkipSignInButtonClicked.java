@@ -1,6 +1,8 @@
 package com.ecdue.lim.events;
 
-public class SkipSignInButtonClicked extends BaseEvent{
+import com.ecdue.lim.base.BaseEvent;
+
+public class SkipSignInButtonClicked extends BaseEvent {
     public SkipSignInButtonClicked(String message) {
         super(message);
     }

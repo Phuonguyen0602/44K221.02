@@ -1,6 +1,8 @@
 package com.ecdue.lim.events;
 
-public class SignOutEvent extends BaseEvent{
+import com.ecdue.lim.base.BaseEvent;
+
+public class SignOutEvent extends BaseEvent {
     public SignOutEvent(String message) {
         super(message);
     }

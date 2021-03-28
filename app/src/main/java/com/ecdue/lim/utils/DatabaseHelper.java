@@ -28,7 +28,8 @@ public class DatabaseHelper {
     private FirebaseAuth auth;
     private String userUid;
     private static DatabaseHelper instance;
-    private ArrayList<DocumentChange> rawFoodsInfo;
+    private ArrayList<DocumentChange> foodsInfoChanges;
+    private ArrayList<DocumentSnapshot> rawFoodsInfo;
     private ArrayList<DocumentSnapshot> rawCosmeticsInfo;
     private ArrayList<DocumentSnapshot> rawMedicinesInfo;
     private Product[] foods;
@@ -48,6 +49,7 @@ public class DatabaseHelper {
         auth = FirebaseAuth.getInstance();
         userUid = auth.getCurrentUser().getUid();
 
+        foodsInfoChanges = new ArrayList<>();
         rawFoodsInfo = new ArrayList<>();
         rawCosmeticsInfo = new ArrayList<>();
         rawMedicinesInfo = new ArrayList<>();
@@ -81,21 +83,29 @@ public class DatabaseHelper {
                         }
                         String source = value.getMetadata().hasPendingWrites() ?
                                 "Local" : "Server";
-                        rawFoodsInfo.addAll(value.getDocumentChanges());
+                        foodsInfoChanges.addAll(value.getDocumentChanges());
                         for (DocumentChange documentChange : value.getDocumentChanges()){
                             Log.d(TAG, "Latest change from " + source + " : " + documentChange.getDocument().getData());
                         }
-                        for (DocumentChange documentChange : rawFoodsInfo){
+                        for (DocumentChange documentChange : foodsInfoChanges){
                             Log.d(TAG, "From " + source + " : " + documentChange.getDocument().getData());
                         }
 //                        for (DocumentSnapshot documentSnapshot : value.getDocuments()){
-//                            Log.d(TAG, "From " + source + " : " + documentSnapshot.getData());
+//                            rawFoodsInfo.add(value.getDocumentChanges());
 //                        }
+                        rawFoodsInfo.addAll(value.getDocuments());
                         foodNumber.postValue((value.getDocuments().size() > 1) ?
                                 value.getDocuments().size() + " products" :
                                 value.getDocuments().size() + " product");
                     }
                 });
+    }
+    public ArrayList<Product> getFoods(){
+        ArrayList<Product> products = new ArrayList<>();
+        for (DocumentSnapshot documentSnapshot : rawFoodsInfo){
+            products.add(Product.mapToProduct(documentSnapshot.getData()));
+        }
+        return products;
     }
     public void getCosmeticQuantity(MutableLiveData<String> cosmeticNumber){
         db.collection("users")
