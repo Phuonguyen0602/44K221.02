@@ -4,8 +4,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.ecdue.lim.events.ShowAddItemDialog;
+import com.ecdue.lim.features.cosmetics_storage.CosmeticCategoryActivity;
 import com.ecdue.lim.features.foods_storage.FoodCategoryActivity;
 import com.ecdue.lim.events.LoadActivityEvent;
+import com.ecdue.lim.features.medicines_storage.MedicineCategoryActivity;
 import com.ecdue.lim.utils.DatabaseHelper;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -36,6 +38,12 @@ public class HomeViewModel extends ViewModel {
     // MainActivity handles this
     public void onFoodCategoryClicked(){
         EventBus.getDefault().post(new LoadActivityEvent(FoodCategoryActivity.class));
+    }
+    public void onCosmeticCategoryClicked(){
+        EventBus.getDefault().post(new LoadActivityEvent(CosmeticCategoryActivity.class));
+    }
+    public void onMedicineCategoryClicked(){
+        EventBus.getDefault().post(new LoadActivityEvent(MedicineCategoryActivity.class));
     }
     public void onAddProductClicked(){
         EventBus.getDefault().post(new ShowAddItemDialog(""));

@@ -1,11 +1,17 @@
 package com.ecdue.lim.features.add_item;
 
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
+import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.ecdue.lim.data.Product;
+import com.ecdue.lim.events.LoadImageEvent;
 import com.ecdue.lim.events.ShowDatePicker;
 import com.ecdue.lim.utils.DatabaseHelper;
 
@@ -21,6 +27,7 @@ public class AddItemFragmentViewModel extends ViewModel {
     public static final String TAG = AddItemFragmentViewModel.class.getSimpleName();
     private MutableLiveData<String> expirationDate = new MutableLiveData<>("");
     private MutableLiveData<String> daysLeft = new MutableLiveData<>("");
+    private MutableLiveData<Bitmap> productImage = new MutableLiveData<>();
     private int notifyBoundary = 3; // Set by user
     private int productDayLefts = 0;
     public void addNewItem(
@@ -50,7 +57,7 @@ public class AddItemFragmentViewModel extends ViewModel {
         product.setToBeNotified(productDayLefts <= notifyBoundary);
         product.setExpired(productDayLefts <= 0);
         try {
-            DatabaseHelper.getInstance().writeNewItem(product);
+            DatabaseHelper.getInstance().addNewProduct(product);
         } catch (IllegalAccessException e) {
             Log.d(TAG, "Write fail");
             e.printStackTrace();
@@ -78,8 +85,8 @@ public class AddItemFragmentViewModel extends ViewModel {
     public void onEdtDateClicked(){
         EventBus.getDefault().post(new ShowDatePicker(""));
     }
-    public void onChoosePictureClicked(){
-
+    public void onChoosePictureClicked(View view){
+        EventBus.getDefault().post(new LoadImageEvent((ImageView) view));
     }
     public void onTakePictureClicked(){
 
@@ -91,6 +98,19 @@ public class AddItemFragmentViewModel extends ViewModel {
 
     public MutableLiveData<String> getDaysLeft() {
         return daysLeft;
+    }
+
+    public MutableLiveData<Bitmap> getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(MutableLiveData<Bitmap> productImage) {
+        this.productImage = productImage;
+    }
+
+    @BindingAdapter("imageBitmap")
+    public static void loadProductImage(ImageView view, Bitmap source){
+        view.setImageBitmap(source);
     }
 
     public void calculateDaysLeft(int cDay, int cMonth, int cYear, int eDay, int eMonth, int eYear) throws ParseException {

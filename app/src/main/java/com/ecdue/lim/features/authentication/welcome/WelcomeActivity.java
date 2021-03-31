@@ -19,6 +19,7 @@ import com.ecdue.lim.databinding.ActivityWelcomeBinding;
 import com.ecdue.lim.events.SignInButtonClicked;
 import com.ecdue.lim.events.SignUpButtonClicked;
 import com.ecdue.lim.events.SkipSignInButtonClicked;
+import com.ecdue.lim.utils.DatabaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -45,8 +46,10 @@ public class WelcomeActivity extends BaseActivity {
         auth = FirebaseAuth.getInstance();
         //TODO: Check session (guest or signed in)
         if (getIntent() != null){
-            if (getIntent().getBooleanExtra(SHOULD_FINISH, false))
+            if (getIntent().getBooleanExtra(SHOULD_FINISH, false)) {
+                DatabaseHelper.getInstance().clearData();
                 finish();
+            }
         }
     }
     @Override

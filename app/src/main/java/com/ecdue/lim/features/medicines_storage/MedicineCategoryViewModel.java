@@ -1,28 +1,27 @@
-package com.ecdue.lim.features.foods_storage;
+package com.ecdue.lim.features.medicines_storage;
 
-import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModel;
 
 import com.ecdue.lim.data.Product;
 import com.ecdue.lim.events.ShowAddItemDialog;
+import com.ecdue.lim.features.cosmetics_storage.CosmeticAdapter;
 import com.ecdue.lim.utils.DatabaseHelper;
-import com.google.firebase.Timestamp;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
-public class FoodCategoryViewModel extends ViewModel {
+public class MedicineCategoryViewModel extends ViewModel {
     private ArrayList<Product> products;
-    public FoodCategoryViewModel(){
 
+    public MedicineCategoryViewModel() {
     }
     public void onAddItemClicked(){
         EventBus.getDefault().post(new ShowAddItemDialog(""));
     }
 
-    public ArrayList<Product> getData(FoodAdapter adapter){
-        products = DatabaseHelper.getInstance().getFoods(adapter);
+    public ArrayList<Product> getData(MedicineAdapter adapter){
+        products = DatabaseHelper.getInstance().getMedicines(adapter);
         return products;
     }
 }

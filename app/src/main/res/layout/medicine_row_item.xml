@@ -13,10 +13,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/category_button"
+        android:backgroundTint="#7D7ABC"
         android:layout_margin="8dp">
 
         <ImageView
             android:id="@+id/imageView2"
+            android:visibility="invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

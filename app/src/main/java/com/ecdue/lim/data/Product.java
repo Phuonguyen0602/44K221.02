@@ -10,6 +10,7 @@ public class Product {
     private String unit;
     private String category;
     private long expire;
+    private long addDate;
     private String imageUrl;
     private String barcode;
     private boolean toBeNotified;
@@ -33,6 +34,7 @@ public class Product {
         this.unit = "";
         this.category = "";
         this.expire = 0;
+        this.addDate = 0;
         this.imageUrl = "";
         this.barcode = "";
         this.toBeNotified = false;

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,6 +28,7 @@ public class AddItemFragment extends DialogFragment {
     //reference: https://github.com/yatatsu/android-data-binding/blob/master/app/src/main/java/com/github/yatatsu/android/trydatabinding/view/EditItemFragment.java
     private FragmentAddItemBinding binding;
     private AddItemFragmentViewModel viewModel;
+    private int defaultCategoryIndex = 0;
     private final Calendar cldr = Calendar.getInstance();
     public static AddItemFragment newInstance() {
         AddItemFragment fragment = new AddItemFragment();
@@ -49,6 +51,7 @@ public class AddItemFragment extends DialogFragment {
         binding = FragmentAddItemBinding.bind(view);
         viewModel = new ViewModelProvider(getActivity()).get(AddItemFragmentViewModel.class);
         binding.setViewModel(viewModel);
+        binding.setImageSource(viewModel.getProductImage().getValue());
         binding.setLifecycleOwner(this);
 
         binding.edtAddExp.addTextChangedListener(new TextWatcher() {
@@ -96,17 +99,16 @@ public class AddItemFragment extends DialogFragment {
                 ((AlertDialog)(dialog)).getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d("AddItemFragment", "Hope this wont close the dialog");
+                        Log.d("AddItemFragment", "This won't close the dialog");
                         if (submitProductInfo())
                             dialog.cancel();
                     }
                 });
+                binding.spnAddCategory.setSelection(defaultCategoryIndex);
             }
         });
-        return dialog;
 
-    }
-    public void overrideButton(){
+        return dialog;
 
     }
 
@@ -161,5 +163,8 @@ public class AddItemFragment extends DialogFragment {
             return true;
         }
         return false;
+    }
+    public void setDefaultCategory(int position){
+        defaultCategoryIndex = position;
     }
 }
