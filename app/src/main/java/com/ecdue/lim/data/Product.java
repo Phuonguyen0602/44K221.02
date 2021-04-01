@@ -1,5 +1,19 @@
 package com.ecdue.lim.data;
 
+import android.Manifest;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.util.Log;
+import android.widget.ImageView;
+
+import androidx.core.content.ContextCompat;
+import androidx.databinding.BindingAdapter;
+
+import com.bumptech.glide.Glide;
+import com.ecdue.lim.utils.DatabaseHelper;
+
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +29,7 @@ public class Product {
     private String barcode;
     private boolean toBeNotified;
     private boolean isExpired;
-
+    private String localImage;
     public Product(String name, float quantity, String unit, String category, long expire, String imageUrl, String barcode, boolean toBeNotified, boolean isExpired) {
         this.name = name;
         this.quantity = quantity;
@@ -36,6 +50,7 @@ public class Product {
         this.expire = 0;
         this.addDate = 0;
         this.imageUrl = "";
+        this.localImage = "";
         this.barcode = "";
         this.toBeNotified = false;
         this.isExpired = false;
@@ -56,9 +71,37 @@ public class Product {
         product.setUnit((String) map.get("unit"));
         product.setCategory((String) map.get("category"));
         product.setExpire((Long) map.get("expire"));
+        product.setAddDate(map.get("addDate") == null ? 0 : (Long) map.get("addDate"));
         product.setImageUrl((String) map.get("imageUrl"));
+        product.setLocalImage(map.get("localImage") == null ? "" : (String) map.get("localImage"));
         product.setBarcode((String) map.get("barcode"));
         return product;
+    }
+
+    @BindingAdapter("imageUrl")
+    public static void loadProductImage(ImageView view, Product product){
+        Log.d("Product", "Image location: " + product.getLocalImage());
+        if (!product.getLocalImage().equals("") && Build.VERSION.SDK_INT <= 29){
+            Log.d("Product", "Load local image at: " + product.getLocalImage());
+            Bitmap image = BitmapFactory.decodeFile(product.getLocalImage());
+            if (image != null)
+                view.setImageBitmap(image);
+            else {
+                DatabaseHelper.getInstance().downloadImage(product.getImageUrl(), view);
+            }
+        }
+        else if (product.getImageUrl() != null && !product.getImageUrl().equals("")){
+            Log.d("Product", "Online url is not null");
+            DatabaseHelper.getInstance().downloadImage(product.getImageUrl(), view);
+        }
+    }
+
+    public String getLocalImage() {
+        return localImage;
+    }
+
+    public void setLocalImage(String localImage) {
+        this.localImage = localImage;
     }
 
     public String getName() {
@@ -99,6 +142,14 @@ public class Product {
 
     public void setExpire(long expired) {
         this.expire = expired;
+    }
+
+    public long getAddDate() {
+        return addDate;
+    }
+
+    public void setAddDate(long addDate) {
+        this.addDate = addDate;
     }
 
     public String getImageUrl() {

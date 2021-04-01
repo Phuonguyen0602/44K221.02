@@ -5,7 +5,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,8 +23,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.ecdue.lim.R;
 import com.ecdue.lim.databinding.FragmentAddItemBinding;
 
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class AddItemFragment extends DialogFragment {
     //reference: https://github.com/yatatsu/android-data-binding/blob/master/app/src/main/java/com/github/yatatsu/android/trydatabinding/view/EditItemFragment.java
@@ -30,6 +34,8 @@ public class AddItemFragment extends DialogFragment {
     private AddItemFragmentViewModel viewModel;
     private int defaultCategoryIndex = 0;
     private final Calendar cldr = Calendar.getInstance();
+    private String addedImageLocation = "";
+
     public static AddItemFragment newInstance() {
         AddItemFragment fragment = new AddItemFragment();
         Bundle args = new Bundle();
@@ -111,7 +117,6 @@ public class AddItemFragment extends DialogFragment {
         return dialog;
 
     }
-
     public void showDatePickerDialog(){
         int cDay = cldr.get(Calendar.DAY_OF_MONTH);
         int cMonth = cldr.get(Calendar.MONTH);
@@ -131,9 +136,18 @@ public class AddItemFragment extends DialogFragment {
         }, cYear, cMonth, cDay);
         dialog.show();
     }
+
     private boolean submitProductInfo(){
         String productName = binding.edtAddName.getText().toString();
         String quantity = binding.edtAddQuantity.getText().toString();
+        Bitmap productImage = binding.imgAddProductImage.getDrawingCache();
+        Uri productImageUri = null;
+        if (productImage != null){
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            productImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), productImage, "Title", null);
+            productImageUri = Uri.parse(path);
+        }
         String unit = "";
         if (binding.rdoAddUnitChoice.getCheckedRadioButtonId() == binding.rdoAddChooseUnit.getId())
             unit = binding.spnAddUnit.getSelectedItem().toString();
@@ -141,6 +155,10 @@ public class AddItemFragment extends DialogFragment {
             unit = binding.edtAddUnit.getText().toString();
         String category = binding.spnAddCategory.getSelectedItem().toString();
         String expDate = binding.edtAddExp.getText().toString();
+        String addDate = String.format(Locale.US, "%d/%d/%d",
+                cldr.get(Calendar.DAY_OF_MONTH),
+                cldr.get(Calendar.MONTH) + 1,
+                cldr.get(Calendar.YEAR));
         String barcode = binding.edtAddBarcode.getText().toString();
         // Image goes here
         binding.edtAddName.setError(null);
@@ -154,17 +172,27 @@ public class AddItemFragment extends DialogFragment {
         else if (!viewModel.dateValidation(expDate))
             binding.edtAddExp.setError("Date format must be dd/M/yyyy");
         else {
-            viewModel.addNewItem(productName,
+            return viewModel.addNewItem(productName,
                     quantity,
                     unit,
                     category,
                     expDate,
-                    barcode);
-            return true;
+                    addDate,
+                    barcode,
+                    productImageUri,
+                    addedImageLocation);
         }
         return false;
     }
     public void setDefaultCategory(int position){
         defaultCategoryIndex = position;
+    }
+
+    public String getAddedImageLocation() {
+        return addedImageLocation;
+    }
+
+    public void setAddedImageLocation(String addedImageLocation) {
+        this.addedImageLocation = addedImageLocation;
     }
 }

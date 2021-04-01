@@ -60,6 +60,7 @@ public class SignInActivity extends BaseActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK){
+                        Log.d(TAG, "Signing in with Google");
                         googleSignInUtils.firebaseAuth(result.getData(), new Observer<Boolean>() {
                             @Override
                             public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
@@ -143,6 +144,7 @@ public class SignInActivity extends BaseActivity {
 
     @Subscribe
     public void onSignInGoogleClicked(SignInGoogleClicked event){
+        Log.d(TAG, "Signing in with Google");
         googleSignInLauncher.launch(googleSignInUtils.getSignInIntent());
     }
     //endregion

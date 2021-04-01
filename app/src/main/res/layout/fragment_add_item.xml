@@ -281,7 +281,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:onClick="@{()->viewModel.onTakePictureClicked()}"
+                android:onClick="@{()->viewModel.onTakePictureClicked(imgAddProductImage)}"
                 app:layout_constraintStart_toEndOf="@+id/img_add_choose_image"
                 app:layout_constraintTop_toBottomOf="@+id/txt_add_image_instruction"
                 app:srcCompat="@drawable/ic_baseline_add_a_photo_24" />

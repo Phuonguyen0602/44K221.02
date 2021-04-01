@@ -29,7 +29,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void initialize(){
-        foodNumber.setValue("test");
+
         DatabaseHelper.getInstance().getFoodQuantity(foodNumber);
         DatabaseHelper.getInstance().getCosmeticQuantity(cosmeticNumber);
         DatabaseHelper.getInstance().getMedicineQuantity(medicineNumber);

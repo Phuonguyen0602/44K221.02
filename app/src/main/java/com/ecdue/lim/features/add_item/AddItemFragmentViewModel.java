@@ -1,7 +1,7 @@
 package com.ecdue.lim.features.add_item;
 
 import android.graphics.Bitmap;
-import android.media.Image;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel;
 import com.ecdue.lim.data.Product;
 import com.ecdue.lim.events.LoadImageEvent;
 import com.ecdue.lim.events.ShowDatePicker;
+import com.ecdue.lim.events.TakePictureEvent;
 import com.ecdue.lim.utils.DatabaseHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,13 +31,17 @@ public class AddItemFragmentViewModel extends ViewModel {
     private MutableLiveData<Bitmap> productImage = new MutableLiveData<>();
     private int notifyBoundary = 3; // Set by user
     private int productDayLefts = 0;
-    public void addNewItem(
+
+    public boolean addNewItem(
             String productName,
             String quantity,
             String unit,
             String category,
             String expDate,
-            String Barcode
+            String addDate,
+            String Barcode,
+            Uri productImage,
+            String imageLocation
     ){
         Log.d(TAG, "Adding item");
         Product product = new Product();
@@ -44,10 +49,16 @@ public class AddItemFragmentViewModel extends ViewModel {
         product.setQuantity(!quantity.equals("") ? Double.parseDouble(quantity) : 0);
         product.setUnit(unit);
         product.setCategory(category);
+        if (productImage != null)
+            product.setImageUrl(DatabaseHelper.getInstance().uploadImage(productImage));
+        if (!imageLocation.equals(""))
+            product.setLocalImage(imageLocation);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/M/yyyy");
         try {
             Date expireDate = simpleDateFormat.parse(expDate);
+            Date addedDate = simpleDateFormat.parse(addDate);
             product.setExpire(expireDate.getTime());
+            product.setAddDate(addedDate.getTime());
         } catch (ParseException e) {
             Log.d(TAG, "Unexpected Error");
         }
@@ -61,8 +72,9 @@ public class AddItemFragmentViewModel extends ViewModel {
         } catch (IllegalAccessException e) {
             Log.d(TAG, "Write fail");
             e.printStackTrace();
+            return false;
         }
-
+        return true;
     }
     //region Fields validation
     public boolean productNameValidation(String name){
@@ -88,8 +100,8 @@ public class AddItemFragmentViewModel extends ViewModel {
     public void onChoosePictureClicked(View view){
         EventBus.getDefault().post(new LoadImageEvent((ImageView) view));
     }
-    public void onTakePictureClicked(){
-
+    public void onTakePictureClicked(View view){
+        EventBus.getDefault().post(new TakePictureEvent((ImageView) view));
     }
 
     public MutableLiveData<String> getExpirationDate() {

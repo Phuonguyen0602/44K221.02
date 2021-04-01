@@ -1,38 +1,42 @@
 package com.ecdue.lim.utils;
 
+import android.net.Uri;
 import android.util.Log;
-import android.widget.Adapter;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.ecdue.lim.data.Product;
 import com.ecdue.lim.features.cosmetics_storage.CosmeticAdapter;
 import com.ecdue.lim.features.foods_storage.FoodAdapter;
 import com.ecdue.lim.features.medicines_storage.MedicineAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 
 // The instance of this class is stored in static variable so it remains active for the program
 // lifetime, which means the database changes can be detected all the time
 public class DatabaseHelper {
     public static final String TAG = DatabaseHelper.class.getSimpleName();
     private FirebaseFirestore db;
+    private StorageReference storageReference;
     private FirebaseAuth auth;
     private String userUid;
     private static DatabaseHelper instance;
@@ -73,6 +77,7 @@ public class DatabaseHelper {
     }
     private DatabaseHelper(){
         db = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
         userUid = auth.getCurrentUser().getUid();
 
@@ -289,6 +294,34 @@ public class DatabaseHelper {
             }
         });
     }
+    public String uploadImage(Uri image){
+        String path = userUid + "/" + Timestamp.now().getSeconds();
+        storageReference.child(path).putFile(image).addOnCompleteListener(
+                new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful())
+                            Log.d(TAG, "Upload image successfully, url: " +
+                                    task.getResult().getMetadata().getPath());
+                        else
+                            Log.d(TAG, "Fail to upload image");
+                    }
+                }
+        );
+        return path;
+    }
+    public void downloadImage(String path, ImageView imageView){
+        storageReference.child(path).getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Glide.with(imageView)
+                            .load(task.getResult())
+                            .into(imageView);
+                }
+            }
+        });
+    }
     public void writeTest(){
 //        HashMap<String, Object> testData = new HashMap<>();
 //        testData.put("name","Pork");
@@ -346,5 +379,6 @@ public class DatabaseHelper {
         foods.clear();
         cosmetics.clear();
         medicines.clear();
+        instance = null;
     }
 }
