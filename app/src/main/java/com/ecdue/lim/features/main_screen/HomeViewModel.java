@@ -1,6 +1,7 @@
 package com.ecdue.lim.features.main_screen;
 
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 import com.ecdue.lim.events.ShowAddItemDialog;
@@ -24,15 +25,18 @@ public class HomeViewModel extends ViewModel {
     private String userUid = FirebaseAuth.getInstance().getUid();
 
 
-    public HomeViewModel() {
+    public HomeViewModel(SavedStateHandle stateHandle) {
 
     }
 
     public void initialize(){
 
         DatabaseHelper.getInstance().getFoodQuantity(foodNumber);
+        DatabaseHelper.getInstance().getFoodStorageStatus(foodStatus);
         DatabaseHelper.getInstance().getCosmeticQuantity(cosmeticNumber);
+        DatabaseHelper.getInstance().getCosmeticStorageStatus(cosmeticStatus);
         DatabaseHelper.getInstance().getMedicineQuantity(medicineNumber);
+        DatabaseHelper.getInstance().getMedicineStorageStatus(medicineStatus);
     }
 
     // MainActivity handles this

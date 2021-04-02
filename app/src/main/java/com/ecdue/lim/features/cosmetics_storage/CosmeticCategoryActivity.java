@@ -39,6 +39,7 @@ public class CosmeticCategoryActivity extends BaseActivity {
     private AddItemFragment addItemFragment;
     private ActivityResultLauncher<Intent> galleryLauncher;
     private ImageView productImageView;
+    private ActivityResultLauncher<Intent> cameraLauncher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -83,7 +83,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@+id/txt_home_medicines"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="3 products" />
 
                 <TextView
                     android:id="@+id/txt_home_medicines_expire"
@@ -91,11 +92,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/quicksand"
-                    android:text="4 products will expire in 2 days"
-                    android:textColor="@color/red_highlight"
+                    android:text="@{viewModel.medicineStatus}"
+                    android:textColor="@{viewModel.medicineStatus.equals(@string/all_products_good) ? @color/teal_200 : @color/red_highlight}"
                     android:textSize="15sp"
                     app:layout_constraintStart_toStartOf="@+id/txt_home_medicines"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_home_medicines" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt_home_medicines"
+                    tools:text="2 products are about to expire" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -142,7 +144,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@+id/txt_home_foods"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="3 products" />
 
                 <TextView
                     android:id="@+id/txt_home_foods_expire"
@@ -150,11 +153,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/quicksand"
-                    android:text="4 products will expire in 2 days"
-                    android:textColor="@color/red_highlight"
+                    android:text="@{viewModel.foodStatus}"
+                    android:textColor="@{viewModel.foodStatus.equals(@string/all_products_good) ? @color/teal_200 : @color/red_highlight}"
                     android:textSize="15sp"
                     app:layout_constraintStart_toStartOf="@+id/txt_home_foods"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_home_foods" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt_home_foods"
+                    tools:text="2 products are about to expire" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -200,7 +204,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@+id/txt_home_cosmetics"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="3 products" />
 
                 <TextView
                     android:id="@+id/txt_home_cosmetics_expire"
@@ -208,11 +213,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/quicksand"
-                    android:text="@string/all_products_good"
-                    android:textColor="@color/teal_200"
+                    android:text="@{viewModel.cosmeticStatus}"
+                    android:textColor="@{viewModel.cosmeticStatus.equals(@string/all_products_good) ? @color/teal_200 : @color/red_highlight}"
                     android:textSize="15sp"
                     app:layout_constraintStart_toStartOf="@+id/txt_home_cosmetics"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_home_cosmetics" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt_home_cosmetics"
+                    tools:text="2 products are about to expire" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

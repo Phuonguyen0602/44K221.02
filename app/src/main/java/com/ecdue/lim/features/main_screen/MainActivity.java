@@ -33,6 +33,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.bumptech.glide.Glide;
 import com.ecdue.lim.R;
 import com.ecdue.lim.base.BaseActivity;
+import com.ecdue.lim.base.BaseAddProductActivity;
 import com.ecdue.lim.events.LoadActivityEvent;
 import com.ecdue.lim.events.LoadImageEvent;
 import com.ecdue.lim.events.ShowAddItemDialog;
@@ -54,16 +55,12 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseAddProductActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
     private FirebaseAuth auth;
     private GoogleSignInUtils googleSignInUtils;
-    private AddItemFragment addItemFragment;
-    private ActivityResultLauncher<Intent> galleryLauncher;
 
-    private ImageView productImageView;
 
-    private ActivityResultLauncher<Intent> cameraLauncher;
 
 
     @Override
@@ -86,6 +83,11 @@ public class MainActivity extends BaseActivity {
 
         Toast.makeText(this, "Welcome back", Toast.LENGTH_SHORT).show();
 
+
+        initActivityLauncher();
+    }
+
+    private void initActivityLauncher() {
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -106,7 +108,7 @@ public class MainActivity extends BaseActivity {
                             addItemFragment.setAddedImageLocation(picturePath);
 
                             Log.d(TAG, "Picture path: " + picturePath);
-                            Glide.with(MainActivity.this)
+                            Glide.with(getContext())
                                     .load(selectedImage)
                                     .into(productImageView);
 
@@ -121,7 +123,7 @@ public class MainActivity extends BaseActivity {
                             productImageView.setDrawingCacheEnabled(true);
                             Bitmap image = (Bitmap) result.getData().getExtras().get("data");
 
-                            Glide.with(MainActivity.this)
+                            Glide.with(getContext())
                                     .load(BitmapUtil.rotateImage(image,90))
                                     .into(productImageView);
 
@@ -129,6 +131,7 @@ public class MainActivity extends BaseActivity {
                     }
                 });
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -161,11 +164,7 @@ public class MainActivity extends BaseActivity {
         loadActivity(event.getaClass());
     }
 
-    @Subscribe
-    public void onShowAddItemDialog(ShowAddItemDialog event){
-        addItemFragment = AddItemFragment.newInstance();
-        addItemFragment.show(getSupportFragmentManager(), "");
-    }
+
     @Subscribe
     public void onShowDatePicker(ShowDatePicker event){
         if (addItemFragment.isResumed())
@@ -173,6 +172,7 @@ public class MainActivity extends BaseActivity {
         else
             Log.d(TAG, "addItemFragment is invisible");
     }
+
     @Subscribe
     public void onLoadImageEvent(LoadImageEvent event){
         this.productImageView = event.getImageView();
@@ -191,10 +191,8 @@ public class MainActivity extends BaseActivity {
             storagePermDialog.setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    Uri uri = Uri.parse("package:" + getApplicationContext().getPackageName());
-                    intent.setData(uri);
-                    startActivity(intent);
+
+                    openAppSettings();
                 }
             });
             storagePermDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -206,6 +204,14 @@ public class MainActivity extends BaseActivity {
             storagePermDialog.show();
         }
     }
+
+    private void openAppSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.parse("package:" + getApplicationContext().getPackageName());
+        intent.setData(uri);
+        startActivity(intent);
+    }
+
     @Subscribe
     public void onTakePictureEvent(TakePictureEvent event){
         this.productImageView = event.getImageView();
@@ -223,10 +229,7 @@ public class MainActivity extends BaseActivity {
             cameraPermDialog.setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    Uri uri = Uri.parse("package:" + getApplicationContext().getPackageName());
-                    intent.setData(uri);
-                    startActivity(intent);
+                    openAppSettings();
                 }
             });
             cameraPermDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -241,22 +244,18 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PermissionUtil.STORAGE_REQUEST) {
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                galleryLauncher.launch(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
-            }  else {
-                // Explain to the user that the feature is unavailable because
-                // the features requires a permission that the user has denied.
-                // At the same time, respect the user's decision. Don't link to
-                // system settings in an effort to convince the user to change
-                // their decision.
-            }
-        }
-        else if (requestCode == PermissionUtil.CAMERA_REQUEST){
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                galleryLauncher.launch(new Intent(MediaStore.ACTION_IMAGE_CAPTURE));
-            }
+        switch (requestCode) {
+            case PermissionUtil.STORAGE_REQUEST:
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    galleryLauncher.launch(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
+                }
+                break;
+            case PermissionUtil.CAMERA_REQUEST:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    galleryLauncher.launch(new Intent(MediaStore.ACTION_IMAGE_CAPTURE));
+                }
+                break;
         }
     }
 }

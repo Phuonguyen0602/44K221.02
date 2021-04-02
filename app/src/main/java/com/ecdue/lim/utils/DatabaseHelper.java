@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -35,6 +36,15 @@ import java.util.Comparator;
 // lifetime, which means the database changes can be detected all the time
 public class DatabaseHelper {
     public static final String TAG = DatabaseHelper.class.getSimpleName();
+    public static final String USER_INFO = "UserInfo";
+    public static final String COSMETIC_THRESHOLD = "cosmetic_threshold";
+    public static final String FOOD_THRESHOLD = "food_threshold";
+    public static final String MEDICINE_THRESHOLD = "medicine_threshold";
+
+    public static int DEFAULT_FOOD_THRESHOLD = 2;
+    public static int DEFAULT_COSMETIC_THRESHOLD = 14;
+    public static int DEFAULT_MEDICINE_THRESHOLD = 14;
+
     private FirebaseFirestore db;
     private StorageReference storageReference;
     private FirebaseAuth auth;
@@ -61,12 +71,19 @@ public class DatabaseHelper {
     private boolean hasFoodListener = false;
     private boolean hasCosmeticListener = false;
     private boolean hasMedicineListener = false;
+    private int foodExpThreshold = DEFAULT_FOOD_THRESHOLD;
+    private int cosmeticExpThreshold = DEFAULT_COSMETIC_THRESHOLD;
+    private int medicineExpThreshold = DEFAULT_MEDICINE_THRESHOLD;
 
     private MutableLiveData<String> foodQuantity = null;
     private MutableLiveData<String> cosmeticQuantity = null;
     private MutableLiveData<String> medicineQuantity = null;
 
     private static int instances;
+    private MutableLiveData<String> foodStatus;
+    private MutableLiveData<String> cosmeticStatus;
+    private MutableLiveData<String> medicineStatus;
+
     public static DatabaseHelper getInstance(){
         if (instance == null) {
             instance = new DatabaseHelper();
@@ -104,9 +121,11 @@ public class DatabaseHelper {
     public void disableCloudSync(){
         db.disableNetwork();
     }
+
     public void enableCloudSync(){
         db.enableNetwork();
     }
+
     public void getFoodQuantity(MutableLiveData<String> foodNumber){
         if (!hasFoodListener) {
             hasFoodListener = true;
@@ -123,9 +142,10 @@ public class DatabaseHelper {
                                 return;
                             }
                             //ArrayList<DocumentChange> documentChanges = new ArrayList<>(value.getDocumentChanges());
-                            foodChanges.clear();
                             foodChanges.addAll(value.getDocumentChanges());
                             processChanges(foodChanges, foods, foodAdapter);
+                            processProductExp(foods, foodExpThreshold, foodStatus);
+                            foodChanges.clear();
 
                             foodQuantity.setValue((value.getDocuments().size() > 1) ?
                                     value.getDocuments().size() + " products" :
@@ -145,10 +165,19 @@ public class DatabaseHelper {
                     });
         }
         else {
-            foodQuantity.postValue(foodQuantity.getValue());
+            foodQuantity = switchAndPostLiveData(foodNumber, foodQuantity);
             processChanges(foodChanges, foods, foodAdapter);
+            processProductExp(foods, foodExpThreshold, foodStatus);
         }
     }
+
+    private MutableLiveData<String> switchAndPostLiveData(MutableLiveData<String> newLiveData, MutableLiveData<String> liveData) {
+        newLiveData.setValue(liveData.getValue());
+        liveData = newLiveData;
+        liveData.postValue(liveData.getValue());
+        return liveData;
+    }
+
     public void getCosmeticQuantity(MutableLiveData<String> cosmeticNumber){
         if (!hasCosmeticListener) {
             hasCosmeticListener = true;
@@ -164,9 +193,11 @@ public class DatabaseHelper {
                                 return;
                             }
 
-                            cosmeticChanges.clear();
+
                             cosmeticChanges.addAll(value.getDocumentChanges());
                             processChanges(cosmeticChanges, cosmetics, cosmeticAdapter);
+                            processProductExp(cosmetics, cosmeticExpThreshold, cosmeticStatus);
+                            cosmeticChanges.clear();
 
                             cosmeticQuantity.setValue((value.getDocuments().size() > 1) ?
                                     value.getDocuments().size() + " products" :
@@ -176,10 +207,12 @@ public class DatabaseHelper {
                     });
         }
         else {
-            cosmeticQuantity.postValue(cosmeticQuantity.getValue());
+            cosmeticQuantity = switchAndPostLiveData(cosmeticNumber, cosmeticQuantity);
             processChanges(cosmeticChanges, cosmetics, cosmeticAdapter);
+            processProductExp(cosmetics, cosmeticExpThreshold, cosmeticStatus);
         }
     }
+
     public void getMedicineQuantity(MutableLiveData<String> medicineNumber){
         if (!hasMedicineListener) {
             hasMedicineListener = true;
@@ -195,9 +228,11 @@ public class DatabaseHelper {
                                 return;
                             }
 
-                            medicineChanges.clear();
+
                             medicineChanges.addAll(value.getDocumentChanges());
                             processChanges(medicineChanges, medicines, medicineAdapter);
+                            processProductExp(medicines, medicineExpThreshold, medicineStatus);
+                            medicineChanges.clear();
 
                             medicineQuantity.setValue((value.getDocuments().size() > 1) ?
                                     value.getDocuments().size() + " products" :
@@ -207,10 +242,12 @@ public class DatabaseHelper {
                     });
         }
         else {
-            medicineQuantity.postValue(medicineQuantity.getValue());
+            medicineQuantity = switchAndPostLiveData(medicineNumber, medicineQuantity);
             processChanges(medicineChanges, medicines, medicineAdapter);
+            processProductExp(medicines, medicineExpThreshold, medicineStatus);
         }
     }
+
     private void processChanges(ArrayList<DocumentChange> documentChanges, ArrayList<Product> foods, RecyclerView.Adapter foodAdapter){
         for (DocumentChange documentChange : documentChanges){
             //products.add(Product.mapToProduct(documentSnapshot.getData()));
@@ -256,6 +293,127 @@ public class DatabaseHelper {
         this.foodAdapter = adapter;
         return foods;
     }
+    public void getFoodStorageStatus(MutableLiveData<String> foodStatusLive){
+        if (this.foodStatus == null) {
+            this.foodStatus = foodStatusLive;
+            db.collection("users")
+                    .document(userUid)
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        if (task.getResult().get(FOOD_THRESHOLD) != null) {
+                            foodExpThreshold = (int) task.getResult().get(FOOD_THRESHOLD);
+                        } else {
+                            db.collection("users")
+                                    .document(userUid)
+                                    .update(FOOD_THRESHOLD, DEFAULT_FOOD_THRESHOLD);
+                        }
+                        processProductExp(foods, foodExpThreshold, foodStatus);
+                    }
+                }
+            });
+        }
+        else {
+            foodStatus = switchAndPostLiveData(foodStatusLive, foodStatus);
+        }
+    }
+    public void getCosmeticStorageStatus(MutableLiveData<String> cosmeticStatusLive){
+        if (this.cosmeticStatus == null) {
+            this.cosmeticStatus = cosmeticStatusLive;
+            db.collection("users")
+                    .document(userUid)
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        if (task.getResult().get(COSMETIC_THRESHOLD) != null) {
+                            cosmeticExpThreshold = (int) task.getResult().get(COSMETIC_THRESHOLD);
+                        } else {
+                            db.collection("users")
+                                    .document(userUid)
+                                    .update(COSMETIC_THRESHOLD, DEFAULT_COSMETIC_THRESHOLD)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful())
+                                                Log.d(TAG, "Update cosmetic threshold successfully");
+                                            else
+                                                Log.d(TAG, "Fail to update cosmetic threshold");
+                                        }
+                                    });
+                        }
+                        processProductExp(cosmetics, cosmeticExpThreshold, cosmeticStatus);
+                    }
+                }
+            });
+        }
+        else {
+            cosmeticStatus = switchAndPostLiveData(cosmeticStatusLive, cosmeticStatus);
+        }
+    }
+
+    public void getMedicineStorageStatus(MutableLiveData<String> medicineStatusLive){
+        if (this.medicineStatus == null) {
+            this.medicineStatus = medicineStatusLive;
+            db.collection("users")
+                    .document(userUid)
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        if (task.getResult().get(MEDICINE_THRESHOLD) != null) {
+                            medicineExpThreshold = (int) task.getResult().get(MEDICINE_THRESHOLD);
+                        } else {
+                            db.collection("users")
+                                    .document(userUid)
+                                    .update(MEDICINE_THRESHOLD, DEFAULT_MEDICINE_THRESHOLD);
+                        }
+                        processProductExp(medicines, medicineExpThreshold, medicineStatus);
+                    }
+                }
+            });
+        }
+        else {
+            medicineStatus = switchAndPostLiveData(medicineStatusLive, medicineStatus);
+        }
+    }
+    private void processProductExp(ArrayList<Product> products, int expThreshold, MutableLiveData<String> liveData) {
+        int nearExpProducts = 0;
+        int expiredProducts = 0;
+        for (Product product : products){
+            long timeLeft = product.getExpire() - DateTimeUtil.getCurrentDayTime();
+            if (timeLeft < 0){
+                expiredProducts++;
+            }
+            else if (timeLeft > 0 && timeLeft < DateTimeUtil.dayToMilliSec(expThreshold))
+                nearExpProducts++;
+        }
+        switch (nearExpProducts){
+            case 0:
+                liveData.setValue("All your products are good");
+                break;
+            case 1:
+                liveData.setValue("1 product is about to expire");
+                break;
+            default:
+                liveData.setValue("" + nearExpProducts + " products are about to expire");
+                break;
+        }
+        switch (expiredProducts){
+            case 0:
+                break;
+            case 1:
+                liveData.setValue("1 product is expired");
+                break;
+            default:
+                liveData.setValue("" + expiredProducts + " products are expired");
+                break;
+        }
+        liveData.postValue(liveData.getValue());
+    }
+
+
     public ArrayList<Product> getCosmetics(CosmeticAdapter adapter){
         this.cosmeticAdapter = adapter;
         return cosmetics;
@@ -265,21 +423,49 @@ public class DatabaseHelper {
         return medicines;
     }
 
+    public void getFoodExpThreshold(){
+
+    }
+    public void getCosmeticExpThreshold(){
+        db.collection("users")
+                .document(userUid)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful() && task.getResult() != null){
+                    if (task.getResult().get("cosmetic_threshold") != null){
+                        cosmeticExpThreshold = (int) task.getResult().get("cosmetic_threshold");
+                    }
+                    else {
+                        db.collection("users")
+                                .document(userUid)
+                                .update("cosmetic_threshold", DEFAULT_COSMETIC_THRESHOLD);
+                    }
+                }
+            }
+        });
+    }
+    public void getMedicineExpThreshold(){
+        db.collection("users")
+                .document(userUid)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful() && task.getResult() != null){
+                    if (task.getResult().get(MEDICINE_THRESHOLD) != null){
+                        medicineExpThreshold = (int) task.getResult().get(MEDICINE_THRESHOLD);
+                    }
+                    else {
+                        db.collection("users")
+                                .document(userUid)
+                                .update(MEDICINE_THRESHOLD, DEFAULT_MEDICINE_THRESHOLD);
+                    }
+                }
+            }
+        });
+    }
 
     public void addNewProduct(Product product) throws IllegalAccessException {
-//        db.collection("users")
-//                .document(userUid)
-//                .collection(product.getCategory())
-//                .document(product.getName() + product.getExpire())
-//                .set(product.toHashMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                if (task.isSuccessful())
-//                    Log.d(TAG, "Write new product successfully");
-//                else
-//                    Log.d(TAG, "Fail to write new product");
-//            }
-//        });
         db.collection("users")
                 .document(userUid)
                 .collection(product.getCategory())
@@ -294,6 +480,7 @@ public class DatabaseHelper {
             }
         });
     }
+
     public String uploadImage(Uri image){
         String path = userUid + "/" + Timestamp.now().getSeconds();
         storageReference.child(path).putFile(image).addOnCompleteListener(
@@ -322,6 +509,7 @@ public class DatabaseHelper {
             }
         });
     }
+
     public void writeTest(){
 //        HashMap<String, Object> testData = new HashMap<>();
 //        testData.put("name","Pork");

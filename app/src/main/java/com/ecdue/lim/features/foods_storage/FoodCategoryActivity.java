@@ -13,12 +13,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -29,9 +33,13 @@ import com.ecdue.lim.databinding.ActivityFoodCategoryBinding;
 import com.ecdue.lim.events.LoadImageEvent;
 import com.ecdue.lim.events.ShowAddItemDialog;
 import com.ecdue.lim.events.ShowDatePicker;
+import com.ecdue.lim.events.TakePictureEvent;
 import com.ecdue.lim.features.add_item.AddItemFragment;
 import com.ecdue.lim.features.main_screen.MainActivity;
+import com.ecdue.lim.utils.BitmapUtil;
 import com.ecdue.lim.utils.DatabaseHelper;
+import com.ecdue.lim.utils.PermissionUtil;
+import com.ecdue.lim.utils.SharedPreferenceUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -40,9 +48,10 @@ public class FoodCategoryActivity extends BaseActivity {
     private ActivityFoodCategoryBinding binding;
     private FoodCategoryViewModel viewModel;
     private AddItemFragment addItemFragment;
+
     private ActivityResultLauncher<Intent> galleryLauncher;
-    private ActivityResultLauncher<String> requestPermissionLauncher;
     private ImageView productImageView;
+    private ActivityResultLauncher<Intent> cameraLauncher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,12 +61,16 @@ public class FoodCategoryActivity extends BaseActivity {
         binding.setLifecycleOwner(this);
 
         initRecyclerView();
+        initActivityLauncher();
+    }
+
+    private void initActivityLauncher() {
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == RESULT_OK && result.getData().getData() != null && productImageView != null){
+                        if (result.getResultCode() == RESULT_OK && result.getData() != null && productImageView != null){
                             productImageView.setDrawingCacheEnabled(true);
                             Uri selectedImage = result.getData().getData();
                             String[] filePathColumn = { MediaStore.Images.Media.DATA };
@@ -70,28 +83,30 @@ public class FoodCategoryActivity extends BaseActivity {
                             String picturePath = cursor.getString(columnIndex);
                             cursor.close();
                             addItemFragment.setAddedImageLocation(picturePath);
-                            Glide.with(FoodCategoryActivity.this)
+
+                            Log.d(TAG, "Picture path: " + picturePath);
+                            Glide.with(getContext())
                                     .load(selectedImage)
                                     .into(productImageView);
-
 
                         }
                     }
                 });
-        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (isGranted) {
-                // Permission is granted. Continue the action or workflow in your
-                // app.
-                galleryLauncher.launch(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
-            } else {
-                // Explain to the user that the feature is unavailable because the
-                // features requires a permission that the user has denied. At the
-                // same time, respect the user's decision. Don't link to system
-                // settings in an effort to convince the user to change their
-                // decision.
+        cameraLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == RESULT_OK && result.getData() != null && productImageView != null){
+                            productImageView.setDrawingCacheEnabled(true);
+                            Bitmap image = (Bitmap) result.getData().getExtras().get("data");
 
-            }
-        });
+                            Glide.with(getContext())
+                                    .load(BitmapUtil.rotateImage(image,90))
+                                    .into(productImageView);
+
+                        }
+                    }
+                });
     }
 
     private void initRecyclerView(){
@@ -116,28 +131,86 @@ public class FoodCategoryActivity extends BaseActivity {
     @Subscribe
     public void onLoadImageEvent(LoadImageEvent event){
         this.productImageView = event.getImageView();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
+        if (PermissionUtil.hasPermissions(this, new String[]{PermissionUtil.READ_STORAGE, PermissionUtil.WRITE_STORAGE})) {
             galleryLauncher.launch(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
+            //takePictureLauncher.launch(null);
+        }
+        else if (ActivityCompat.shouldShowRequestPermissionRationale(this, PermissionUtil.READ_STORAGE) || !PermissionUtil.requestStorageBefore) {
+            PermissionUtil.requestStorageBefore = true;
+            ActivityCompat.requestPermissions(this, PermissionUtil.STORAGE_PERM, PermissionUtil.STORAGE_REQUEST);
         }
         else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            AlertDialog.Builder storagePermDialog = new AlertDialog.Builder(this);
+            storagePermDialog.setTitle("Storage permission is denied");
+            storagePermDialog.setMessage("The storage permission is required to load and store your product images. Please go to app settings and allow it!");
+            storagePermDialog.setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    openAppSettings();
+                }
+            });
+            storagePermDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            storagePermDialog.show();
+        }
+    }
+
+    private void openAppSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.parse("package:" + getApplicationContext().getPackageName());
+        intent.setData(uri);
+        startActivity(intent);
+    }
+
+    @Subscribe
+    public void onTakePictureEvent(TakePictureEvent event){
+        this.productImageView = event.getImageView();
+        if (PermissionUtil.hasPermission(this, PermissionUtil.CAMERA)) {
+            cameraLauncher.launch(new Intent(MediaStore.ACTION_IMAGE_CAPTURE));
+        }
+        else if (ActivityCompat.shouldShowRequestPermissionRationale(this, PermissionUtil.CAMERA) || !SharedPreferenceUtil.getHasRequestCameraBefore(this)) {
+            SharedPreferenceUtil.setHasRequestCameraBefore(this, true);
+            ActivityCompat.requestPermissions(this, PermissionUtil.CAMERA_PERM, PermissionUtil.CAMERA_REQUEST);
+        }
+        else {
+            AlertDialog.Builder cameraPermDialog = new AlertDialog.Builder(this);
+            cameraPermDialog.setTitle("Camera permission denied");
+            cameraPermDialog.setMessage("The camera permission is required to take a picture. Please go to app settings and allow it!");
+            cameraPermDialog.setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    openAppSettings();
+                }
+            });
+            cameraPermDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            cameraPermDialog.show();
         }
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 0) {
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                galleryLauncher.launch(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
-            }  else {
-                // Explain to the user that the feature is unavailable because
-                // the features requires a permission that the user has denied.
-                // At the same time, respect the user's decision. Don't link to
-                // system settings in an effort to convince the user to change
-                // their decision.
-            }
+        switch (requestCode) {
+            case PermissionUtil.STORAGE_REQUEST:
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    galleryLauncher.launch(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
+                }
+                break;
+            case PermissionUtil.CAMERA_REQUEST:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    galleryLauncher.launch(new Intent(MediaStore.ACTION_IMAGE_CAPTURE));
+                }
+                break;
         }
     }
 }

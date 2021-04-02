@@ -27,4 +27,5 @@ public class SharedPreferenceUtil {
                 .putBoolean(HAS_REQUEST_CAMERA_BEFORE, value)
                 .apply();
     }
+
 }
