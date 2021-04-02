@@ -54,6 +54,7 @@ public class MedicineCategoryActivity extends BaseAddProductActivity {
         RecyclerView medicinesList = binding.rvMedicines;
         MedicineAdapter medicineAdapter = new MedicineAdapter();
         medicineAdapter.setProducts(viewModel.getData(medicineAdapter));
+        medicineAdapter.setViewModel(viewModel);
         medicinesList.setAdapter(medicineAdapter);
         medicinesList.setLayoutManager(new LinearLayoutManager(this));
     }

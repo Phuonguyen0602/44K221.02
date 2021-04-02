@@ -16,9 +16,13 @@ import java.util.ArrayList;
 
 public class CosmeticAdapter extends RecyclerView.Adapter<CosmeticAdapter.CosmeticViewHolder> {
     private ArrayList<Product> products;
-
+    private CosmeticCategoryViewModel viewModel;
     public void setProducts(ArrayList<Product> products) {
         this.products = products;
+    }
+
+    public void setViewModel(CosmeticCategoryViewModel viewModel) {
+        this.viewModel = viewModel;
     }
 
     @NonNull
@@ -36,6 +40,13 @@ public class CosmeticAdapter extends RecyclerView.Adapter<CosmeticAdapter.Cosmet
     @Override
     public void onBindViewHolder(@NonNull CosmeticViewHolder holder, int position) {
         holder.binding.setProduct(products.get(position));
+
+        holder.binding.imgCosmeticRowDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.onDeleteClicked(holder.getAdapterPosition());
+            }
+        });
     }
 
     @Override

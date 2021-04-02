@@ -1,49 +1,25 @@
 package com.ecdue.lim.features.foods_storage;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.provider.Settings;
-import android.util.Log;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.ecdue.lim.R;
-import com.ecdue.lim.base.BaseActivity;
 import com.ecdue.lim.base.BaseAddProductActivity;
 import com.ecdue.lim.databinding.ActivityFoodCategoryBinding;
 import com.ecdue.lim.events.BackButtonClicked;
-import com.ecdue.lim.events.LoadImageEvent;
-import com.ecdue.lim.events.ShowAddItemDialog;
+import com.ecdue.lim.events.CreateNotificationEvent;
 import com.ecdue.lim.events.ShowConfirmDeleteEvent;
-import com.ecdue.lim.events.ShowDatePicker;
-import com.ecdue.lim.events.TakePictureEvent;
-import com.ecdue.lim.features.add_item.AddItemFragment;
 import com.ecdue.lim.features.authentication.welcome.WelcomeActivity;
-import com.ecdue.lim.features.main_screen.MainActivity;
-import com.ecdue.lim.utils.BitmapUtil;
-import com.ecdue.lim.utils.DatabaseHelper;
-import com.ecdue.lim.utils.PermissionUtil;
-import com.ecdue.lim.utils.SharedPreferenceUtil;
+import com.ecdue.lim.utils.NotificationUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -94,5 +70,21 @@ public class FoodCategoryActivity extends BaseAddProductActivity {
     @Subscribe
     public void onBackButtonClicked(BackButtonClicked event){
         finish();
+    }
+
+    @Subscribe
+    public void onCreateNotificationEvent(CreateNotificationEvent event){
+        Intent intent = new Intent(this, WelcomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        NotificationUtil.createNotification(
+                this,
+                R.drawable.app_logo_small,
+                "Your product is about to expire",
+                "Your product will expire on 14/4/2021",
+                NotificationCompat.PRIORITY_DEFAULT,
+                true,
+                pendingIntent
+                );
     }
 }

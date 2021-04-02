@@ -24,6 +24,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -31,6 +32,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 
 // The instance of this class is stored in static variable so it remains active for the program
 // lifetime, which means the database changes can be detected all the time
@@ -43,9 +45,9 @@ public class DatabaseHelper {
     public static final String CATEGORY_FOOD = "Foods";
     public static final String CATEGORY_COSMETIC = "Cosmetics";
     public static final String CATEGORY_MEDICINE = "Medicines";
-    public static int DEFAULT_FOOD_THRESHOLD = 2;
-    public static int DEFAULT_COSMETIC_THRESHOLD = 14;
-    public static int DEFAULT_MEDICINE_THRESHOLD = 14;
+    public static long DEFAULT_FOOD_THRESHOLD = 2;
+    public static long DEFAULT_COSMETIC_THRESHOLD = 14;
+    public static long DEFAULT_MEDICINE_THRESHOLD = 14;
 
     private FirebaseFirestore db;
     private StorageReference storageReference;
@@ -73,9 +75,9 @@ public class DatabaseHelper {
     private boolean hasFoodListener = false;
     private boolean hasCosmeticListener = false;
     private boolean hasMedicineListener = false;
-    private int foodExpThreshold = DEFAULT_FOOD_THRESHOLD;
-    private int cosmeticExpThreshold = DEFAULT_COSMETIC_THRESHOLD;
-    private int medicineExpThreshold = DEFAULT_MEDICINE_THRESHOLD;
+    private long foodExpThreshold = DEFAULT_FOOD_THRESHOLD;
+    private long cosmeticExpThreshold = DEFAULT_COSMETIC_THRESHOLD;
+    private long medicineExpThreshold = DEFAULT_MEDICINE_THRESHOLD;
 
     private MutableLiveData<String> foodQuantity = null;
     private MutableLiveData<String> cosmeticQuantity = null;
@@ -307,11 +309,13 @@ public class DatabaseHelper {
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful() && task.getResult() != null) {
                         if (task.getResult().get(FOOD_THRESHOLD) != null) {
-                            foodExpThreshold = (int) task.getResult().get(FOOD_THRESHOLD);
+                            foodExpThreshold = (long) task.getResult().get(FOOD_THRESHOLD);
                         } else {
+                            HashMap<String, Object> temp = new HashMap<>();
+                            temp.put(FOOD_THRESHOLD, DEFAULT_FOOD_THRESHOLD);
                             db.collection("users")
                                     .document(userUid)
-                                    .update(FOOD_THRESHOLD, DEFAULT_FOOD_THRESHOLD);
+                                    .set(temp, SetOptions.merge());
                         }
                         processProductExp(foods, foodExpThreshold, foodStatus);
                     }
@@ -332,20 +336,13 @@ public class DatabaseHelper {
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful() && task.getResult() != null) {
                         if (task.getResult().get(COSMETIC_THRESHOLD) != null) {
-                            cosmeticExpThreshold = (int) task.getResult().get(COSMETIC_THRESHOLD);
+                            cosmeticExpThreshold = (long) task.getResult().get(COSMETIC_THRESHOLD);
                         } else {
+                            HashMap<String, Object> temp = new HashMap<>();
+                            temp.put(COSMETIC_THRESHOLD, DEFAULT_COSMETIC_THRESHOLD);
                             db.collection("users")
                                     .document(userUid)
-                                    .update(COSMETIC_THRESHOLD, DEFAULT_COSMETIC_THRESHOLD)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful())
-                                                Log.d(TAG, "Update cosmetic threshold successfully");
-                                            else
-                                                Log.d(TAG, "Fail to update cosmetic threshold");
-                                        }
-                                    });
+                                    .set(temp, SetOptions.merge());
                         }
                         processProductExp(cosmetics, cosmeticExpThreshold, cosmeticStatus);
                     }
@@ -367,11 +364,13 @@ public class DatabaseHelper {
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful() && task.getResult() != null) {
                         if (task.getResult().get(MEDICINE_THRESHOLD) != null) {
-                            medicineExpThreshold = (int) task.getResult().get(MEDICINE_THRESHOLD);
+                            medicineExpThreshold = (long) task.getResult().get(MEDICINE_THRESHOLD);
                         } else {
+                            HashMap<String, Object> temp = new HashMap<>();
+                            temp.put(MEDICINE_THRESHOLD, DEFAULT_MEDICINE_THRESHOLD);
                             db.collection("users")
                                     .document(userUid)
-                                    .update(MEDICINE_THRESHOLD, DEFAULT_MEDICINE_THRESHOLD);
+                                    .set(temp, SetOptions.merge());
                         }
                         processProductExp(medicines, medicineExpThreshold, medicineStatus);
                     }
@@ -382,16 +381,19 @@ public class DatabaseHelper {
             medicineStatus = switchAndPostLiveData(medicineStatusLive, medicineStatus);
         }
     }
-    private void processProductExp(ArrayList<Product> products, int expThreshold, MutableLiveData<String> liveData) {
+    private void processProductExp(ArrayList<Product> products, long expThreshold, MutableLiveData<String> liveData) {
         int nearExpProducts = 0;
         int expiredProducts = 0;
         for (Product product : products){
             long timeLeft = product.getExpire() - DateTimeUtil.getCurrentDayTime();
             if (timeLeft < 0){
                 expiredProducts++;
+                product.setExpired(true);
             }
-            else if (timeLeft > 0 && timeLeft < DateTimeUtil.dayToMilliSec(expThreshold))
+            else if (timeLeft > 0 && timeLeft <= DateTimeUtil.dayToMilliSec(expThreshold)) {
                 nearExpProducts++;
+                product.setToBeNotified(true);
+            }
         }
         switch (nearExpProducts){
             case 0:
@@ -425,48 +427,6 @@ public class DatabaseHelper {
     public ArrayList<Product> getMedicines(MedicineAdapter adapter){
         this.medicineAdapter = adapter;
         return medicines;
-    }
-
-    public void getFoodExpThreshold(){
-
-    }
-    public void getCosmeticExpThreshold(){
-        db.collection("users")
-                .document(userUid)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful() && task.getResult() != null){
-                    if (task.getResult().get("cosmetic_threshold") != null){
-                        cosmeticExpThreshold = (int) task.getResult().get("cosmetic_threshold");
-                    }
-                    else {
-                        db.collection("users")
-                                .document(userUid)
-                                .update("cosmetic_threshold", DEFAULT_COSMETIC_THRESHOLD);
-                    }
-                }
-            }
-        });
-    }
-    public void getMedicineExpThreshold(){
-        db.collection("users")
-                .document(userUid)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful() && task.getResult() != null){
-                    if (task.getResult().get(MEDICINE_THRESHOLD) != null){
-                        medicineExpThreshold = (int) task.getResult().get(MEDICINE_THRESHOLD);
-                    }
-                    else {
-                        db.collection("users")
-                                .document(userUid)
-                                .update(MEDICINE_THRESHOLD, DEFAULT_MEDICINE_THRESHOLD);
-                    }
-                }
-            }
-        });
     }
 
     public void addNewProduct(Product product) throws IllegalAccessException {

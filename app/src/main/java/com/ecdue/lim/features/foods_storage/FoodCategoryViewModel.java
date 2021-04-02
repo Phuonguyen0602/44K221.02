@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.ecdue.lim.data.Product;
 import com.ecdue.lim.events.BackButtonClicked;
+import com.ecdue.lim.events.CreateNotificationEvent;
 import com.ecdue.lim.events.ShowAddItemDialog;
 import com.ecdue.lim.events.ShowConfirmDeleteEvent;
 import com.ecdue.lim.utils.DatabaseHelper;
@@ -44,7 +45,7 @@ public class FoodCategoryViewModel extends ViewModel {
     }
 
     public void onSearchClicked(){
-
+        EventBus.getDefault().post(new CreateNotificationEvent());
     }
 
     public String getCategory() {

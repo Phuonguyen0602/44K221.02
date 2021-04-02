@@ -30,4 +30,6 @@ public class ScanViewModel extends ViewModel {
     public void turnOnCloudSync(){
         DatabaseHelper.getInstance().enableCloudSync();
     }
+
+
 }

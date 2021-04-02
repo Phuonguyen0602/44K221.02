@@ -33,4 +33,7 @@ public class DateTimeUtil {
     public static long dayToMilliSec(int numberOfDays){
         return numberOfDays * 24 * 60 * 60 * 1000;
     }
+    public static long dayToMilliSec(long numberOfDays){
+        return numberOfDays * 24 * 60 * 60 * 1000;
+    }
 }

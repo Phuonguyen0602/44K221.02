@@ -57,6 +57,7 @@ public class CosmeticCategoryActivity extends BaseAddProductActivity {
         RecyclerView cosmeticsList = binding.rvCosmetics;
         CosmeticAdapter cosmeticAdapter = new CosmeticAdapter();
         cosmeticAdapter.setProducts(viewModel.getData(cosmeticAdapter));
+        cosmeticAdapter.setViewModel(viewModel);
         cosmeticsList.setAdapter(cosmeticAdapter);
         cosmeticsList.setLayoutManager(new LinearLayoutManager(this));
     }

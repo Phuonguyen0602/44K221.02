@@ -1,6 +1,7 @@
 package com.ecdue.lim.features.medicines_storage;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 
 public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.MedicineViewHolder> {
     private ArrayList<Product> products;
-
+    private MedicineCategoryViewModel viewModel;
     @NonNull
     @Override
     public MedicineAdapter.MedicineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -31,6 +32,13 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
     @Override
     public void onBindViewHolder(@NonNull MedicineAdapter.MedicineViewHolder holder, int position) {
         holder.binding.setProduct(products.get(position));
+
+        holder.binding.imgMedicineRowDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.onDeleteClicked(holder.getAdapterPosition());
+            }
+        });
     }
 
     @Override
@@ -40,6 +48,10 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
 
     public void setProducts(ArrayList<Product> data) {
         this.products = data;
+    }
+
+    public void setViewModel(MedicineCategoryViewModel viewModel) {
+        this.viewModel = viewModel;
     }
 
     class MedicineViewHolder extends RecyclerView.ViewHolder {
