@@ -40,7 +40,9 @@ public class DatabaseHelper {
     public static final String COSMETIC_THRESHOLD = "cosmetic_threshold";
     public static final String FOOD_THRESHOLD = "food_threshold";
     public static final String MEDICINE_THRESHOLD = "medicine_threshold";
-
+    public static final String CATEGORY_FOOD = "Foods";
+    public static final String CATEGORY_COSMETIC = "Cosmetics";
+    public static final String CATEGORY_MEDICINE = "Medicines";
     public static int DEFAULT_FOOD_THRESHOLD = 2;
     public static int DEFAULT_COSMETIC_THRESHOLD = 14;
     public static int DEFAULT_MEDICINE_THRESHOLD = 14;
@@ -256,6 +258,7 @@ public class DatabaseHelper {
                     break;
                 case ADDED:
                     Product newProduct = Product.mapToProduct(documentChange.getDocument().getData());
+                    newProduct.setId(documentChange.getDocument().getId());
                     // Find the appropriate position to insert
                     int insertIndex = Collections.binarySearch(foods, newProduct, new Comparator<Product>() {
                         @Override
@@ -273,14 +276,15 @@ public class DatabaseHelper {
 
                 case REMOVED:
                     Product removedProduct = Product.mapToProduct(documentChange.getDocument().getData());
-                    int removeIndex = Collections.binarySearch(foods, removedProduct, new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Long.compare(o1.getExpire(), o2.getExpire());
+                    int removeIndex = -1;
+                    for (int i = 0; i < foods.size(); i++){
+                        if (foods.get(i).getId().equals(documentChange.getDocument().getId())) {
+                            removeIndex = i;
+                            break;
                         }
-                    });
+                    }
                     if (removeIndex < 0)
-                        removeIndex = (removeIndex + 1)*-1;
+                        break;
                     foods.remove(removeIndex);
                     if (foodAdapter != null) foodAdapter.notifyItemRemoved(removeIndex);
                     break;
@@ -480,7 +484,22 @@ public class DatabaseHelper {
             }
         });
     }
-
+    public void deleteProduct(String category, Product product){
+        db.collection("users")
+                .document(userUid)
+                .collection(category)
+                .document(product.getId())
+                .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful())
+                            Log.d(TAG, "Delete product successfully");
+                        else
+                            Log.d(TAG, "Fail to delete product");
+                    }
+                });
+    }
     public String uploadImage(Uri image){
         String path = userUid + "/" + Timestamp.now().getSeconds();
         storageReference.child(path).putFile(image).addOnCompleteListener(

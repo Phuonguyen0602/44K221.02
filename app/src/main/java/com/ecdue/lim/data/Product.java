@@ -30,6 +30,7 @@ public class Product {
     private boolean toBeNotified;
     private boolean isExpired;
     private String localImage;
+    private String id;
     public Product(String name, float quantity, String unit, String category, long expire, String imageUrl, String barcode, boolean toBeNotified, boolean isExpired) {
         this.name = name;
         this.quantity = quantity;
@@ -54,6 +55,7 @@ public class Product {
         this.barcode = "";
         this.toBeNotified = false;
         this.isExpired = false;
+        this.id = "";
     }
 
     public HashMap<String, Object> toHashMap() throws IllegalAccessException {
@@ -182,5 +184,13 @@ public class Product {
 
     public void setExpired(boolean expire) {
         isExpired = expire;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

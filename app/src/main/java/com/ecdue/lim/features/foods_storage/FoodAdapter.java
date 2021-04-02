@@ -1,6 +1,8 @@
 package com.ecdue.lim.features.foods_storage;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -14,13 +16,20 @@ import com.ecdue.lim.databinding.FoodRowItemBinding;
 import java.util.ArrayList;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
+    private FoodCategoryViewModel viewModel;
     private ArrayList<Product> products;
-    public FoodAdapter(ArrayList<Product> products) {
+
+    public FoodAdapter(ArrayList<Product> products, FoodCategoryViewModel viewModel) {
         this.products = products;
+        this.viewModel = viewModel;
     }
 
     public void setProducts(ArrayList<Product> products) {
         this.products = products;
+    }
+
+    public void setViewModel(FoodCategoryViewModel viewModel) {
+        this.viewModel = viewModel;
     }
 
     public FoodAdapter() {
@@ -41,6 +50,15 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
         holder.binding.setProduct(products.get(position));
+        holder.position = position;
+
+        holder.binding.imgFoodRowDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.onDeleteClicked(holder.getAdapterPosition());
+            }
+        });
+
     }
 
     @Override
@@ -50,6 +68,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     class FoodViewHolder extends RecyclerView.ViewHolder {
         private final FoodRowItemBinding binding;
+        private int position = 0;
         public FoodViewHolder(FoodRowItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;

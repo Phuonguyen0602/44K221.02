@@ -8,6 +8,9 @@
         <variable
             name="product"
             type="com.ecdue.lim.data.Product" />
+        <variable
+            name="viewModel"
+            type="com.ecdue.lim.features.foods_storage.FoodCategoryViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -95,12 +98,25 @@
             android:id="@+id/img_product_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             app:imageUrl="@{product}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/img_food_row_delete"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.476"
             tools:srcCompat="@tools:sample/avatars" />
+
+        <ImageView
+            android:id="@+id/img_food_row_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.452"
+            app:srcCompat="@drawable/ic_baseline_delete_forever_24" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
