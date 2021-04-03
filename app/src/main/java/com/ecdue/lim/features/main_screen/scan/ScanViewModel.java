@@ -17,19 +17,5 @@ public class ScanViewModel extends ViewModel {
     public LiveData<String> getText() {
         return mText;
     }
-    public void onWriteTestClicked(){
-        //Log.d(DatabaseHelper.TAG, "User click Write test");
-        DatabaseHelper.getInstance().writeTest();
-    }
-    public void onReadTestClicked(){
-        DatabaseHelper.getInstance().readTestData();
-    }
-    public void turnOffCloudSync(){
-        DatabaseHelper.getInstance().disableCloudSync();
-    }
-    public void turnOnCloudSync(){
-        DatabaseHelper.getInstance().enableCloudSync();
-    }
-
 
 }

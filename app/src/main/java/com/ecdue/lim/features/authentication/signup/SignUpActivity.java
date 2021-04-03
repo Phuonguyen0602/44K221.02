@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -116,11 +117,13 @@ public class SignUpActivity extends BaseActivity {
                         googleSignInUtils.firebaseAuth(result.getData(), new Observer<Boolean>() {
                             @Override
                             public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+                                showLoadingDialog();
 
                             }
 
                             @Override
                             public void onNext(@io.reactivex.rxjava3.annotations.NonNull Boolean success) {
+                                hideLoadingDialog();
                                 if (success){
                                     googleSignInSuccessfully();
                                 }
@@ -169,12 +172,14 @@ public class SignUpActivity extends BaseActivity {
         binding.txtSignupErrorMess.setText("");
 
         if (viewModel.nameValidation(name) == null && viewModel.emailValidation(email) == null && viewModel.passwordValidation(password) == null){
+            showLoadingDialog();
             Log.d(TAG, "Registering user with name: " + binding.edtSignupName.getText().toString()
                     + " email: " + binding.edtSignupEmail.getText().toString()
                     + " password: " + binding.edtSignupPassword.getText().toString());
             auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                hideLoadingDialog();
                 if (task.isSuccessful()){
                     Log.d(TAG, "Sign up successfully");
                     auth.getCurrentUser().updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(name).build()).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -211,4 +216,10 @@ public class SignUpActivity extends BaseActivity {
         googleSignInLauncher.launch(googleSignInUtils.getSignInIntent());
     }
     //endregion
+    private void showLoadingDialog() {
+        binding.layoutSigninLoading.setVisibility(View.VISIBLE);
+    }
+    private void hideLoadingDialog() {
+        binding.layoutSigninLoading.setVisibility(View.GONE);
+    }
 }

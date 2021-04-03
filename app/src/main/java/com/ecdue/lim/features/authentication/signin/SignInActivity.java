@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -64,11 +65,13 @@ public class SignInActivity extends BaseActivity {
                         googleSignInUtils.firebaseAuth(result.getData(), new Observer<Boolean>() {
                             @Override
                             public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+                                showLoadingDialog();
 
                             }
 
                             @Override
                             public void onNext(@io.reactivex.rxjava3.annotations.NonNull Boolean success) {
+                                hideLoadingDialog();
                                 if (success){
                                     googleSignInSuccessfully();
                                 }
@@ -118,9 +121,11 @@ public class SignInActivity extends BaseActivity {
         String email = binding.edtSigninEmail.getText().toString();
         String password = binding.edtSigninPassword.getText().toString();
         if (viewModel.emailValidation(email) == null && viewModel.passwordValidation(password) == null) {
+            showLoadingDialog();
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
+                    hideLoadingDialog();
                     if (task.isSuccessful()){
                         Log.d(TAG, "Sign in successfully");
                         loadActivity(MainActivity.class);
@@ -148,5 +153,10 @@ public class SignInActivity extends BaseActivity {
         googleSignInLauncher.launch(googleSignInUtils.getSignInIntent());
     }
     //endregion
-
+    private void showLoadingDialog() {
+        binding.layoutSigninLoading.setVisibility(View.VISIBLE);
+    }
+    private void hideLoadingDialog() {
+        binding.layoutSigninLoading.setVisibility(View.GONE);
+    }
 }

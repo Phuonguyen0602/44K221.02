@@ -500,59 +500,6 @@ public class DatabaseHelper {
             }
         });
     }
-
-    public void writeTest(){
-//        HashMap<String, Object> testData = new HashMap<>();
-//        testData.put("name","Pork");
-//        testData.put("quantity", 1);
-//        testData.put("measurement", "kg");
-//        Log.d("Database", "Writing test data for user with uid " + userUid);
-//        db.collection("users")
-//                .document(userUid)
-//                .collection("Foods")
-//                .document("food" + String.valueOf((int)(Math.random()*1000)))
-//                .set(testData).addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                if (task.isSuccessful())
-//                    Log.d("Database", "Write data successfully");
-//                else
-//                    Log.d("Database", "Fail to write data");
-//            }
-//        });
-    }
-    public void readTestData(){
-//        db.collection("users")
-//                .document(userUid)
-//                .collection("Foods")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.getResult().isEmpty())
-//                            Log.d(TAG, "Path does not exist");
-//                        else
-//                            Log.d(TAG, "Path exists");
-//                    }
-//                });
-//        db.collection("users")
-//                .document(userUid)
-//                .collection("Foods")
-//                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//                        if (error != null || value == null){
-//                            Log.d(TAG, "Fail to read from database");
-//                            return;
-//                        }
-//                        String source = value.getMetadata().hasPendingWrites() ?
-//                                "Local" : "Server";
-//                        for (DocumentSnapshot documentSnapshot : value.getDocuments()){
-//                            Log.d(TAG, "From " + source + " : " + documentSnapshot.getData());
-//                        }
-//                    }
-//                });
-    }
     //endregion
     public void clearData(){
         foods.clear();
