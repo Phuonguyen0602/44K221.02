@@ -80,7 +80,7 @@ public class FoodCategoryActivity extends BaseAddProductActivity {
         NotificationUtil.createNotification(
                 this,
                 R.drawable.app_logo_small,
-                "Your product is about to expire",
+                "Expiration date reminder",
                 "Your product will expire on 14/4/2021",
                 NotificationCompat.PRIORITY_DEFAULT,
                 true,

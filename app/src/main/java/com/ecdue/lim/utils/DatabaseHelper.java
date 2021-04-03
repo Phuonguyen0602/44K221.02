@@ -429,6 +429,18 @@ public class DatabaseHelper {
         return medicines;
     }
 
+    public ArrayList<Product> getFoods() {
+        return foods;
+    }
+
+    public ArrayList<Product> getCosmetics() {
+        return cosmetics;
+    }
+
+    public ArrayList<Product> getMedicines() {
+        return medicines;
+    }
+
     public void addNewProduct(Product product) throws IllegalAccessException {
         db.collection("users")
                 .document(userUid)
@@ -548,4 +560,5 @@ public class DatabaseHelper {
         medicines.clear();
         instance = null;
     }
+
 }

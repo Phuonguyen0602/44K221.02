@@ -1,4 +1,4 @@
-package com.ecdue.lim.features.main_screen;
+package com.ecdue.lim.features.main_screen.account;
 
 import androidx.lifecycle.ViewModel;
 

@@ -79,7 +79,10 @@ public class Product {
         product.setBarcode((String) map.get("barcode"));
         return product;
     }
-
+    @BindingAdapter("imgRes")
+    public static void setImageResource(ImageView view, int resource) {
+        view.setImageResource(resource);
+    }
     @BindingAdapter("imageUrl")
     public static void loadProductImage(ImageView view, Product product){
         Log.d("Product", "Image location: " + product.getLocalImage());

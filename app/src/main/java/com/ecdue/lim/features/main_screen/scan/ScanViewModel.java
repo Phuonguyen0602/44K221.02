@@ -1,4 +1,4 @@
-package com.ecdue.lim.features.main_screen;
+package com.ecdue.lim.features.main_screen.scan;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

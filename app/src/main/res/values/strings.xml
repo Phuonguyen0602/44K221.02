@@ -28,6 +28,7 @@
     <string name="category_cosmetics">Cosmetics</string>
     <string name="category_medicines">Medicines</string>
     <string name="all_products_good">All your products are good</string>
+    <string name="search_product">Search product</string>
     <string name="number_products">%d products</string>
     <string name="one_product">1 product</string>
 

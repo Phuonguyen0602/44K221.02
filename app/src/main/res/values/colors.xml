@@ -10,4 +10,7 @@
     <color name="black">#FF000000</color>
     <color name="red_highlight">#FFFB4D3D</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="food">#8AC244</color>
+    <color name="cosmetic">#F9B9B7</color>
+    <color name="medicine">#7D7ABC</color>
 </resources>

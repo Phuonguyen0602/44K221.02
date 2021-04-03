@@ -5,12 +5,12 @@
     <data>
         <variable
             name="viewModel"
-            type="com.ecdue.lim.features.main_screen.AccountViewModel" />
+            type="com.ecdue.lim.features.main_screen.account.AccountViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.main_screen.AccountFragment">
+    tools:context=".features.main_screen.account.AccountFragment">
 
     <TextView
         android:id="@+id/text_dashboard"

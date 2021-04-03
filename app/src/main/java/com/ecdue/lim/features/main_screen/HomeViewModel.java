@@ -23,6 +23,7 @@ public class HomeViewModel extends ViewModel {
     private MutableLiveData<String> cosmeticStatus = new MutableLiveData<>("");
     private MutableLiveData<String> medicineStatus = new MutableLiveData<>("");
     private String userUid = FirebaseAuth.getInstance().getUid();
+    private DatabaseHelper databaseHelper;
 
 
     public HomeViewModel(SavedStateHandle stateHandle) {
@@ -31,12 +32,13 @@ public class HomeViewModel extends ViewModel {
 
     public void initialize(){
 
-        DatabaseHelper.getInstance().getFoodQuantity(foodNumber);
-        DatabaseHelper.getInstance().getFoodStorageStatus(foodStatus);
-        DatabaseHelper.getInstance().getCosmeticQuantity(cosmeticNumber);
-        DatabaseHelper.getInstance().getCosmeticStorageStatus(cosmeticStatus);
-        DatabaseHelper.getInstance().getMedicineQuantity(medicineNumber);
-        DatabaseHelper.getInstance().getMedicineStorageStatus(medicineStatus);
+        databaseHelper = DatabaseHelper.getInstance();
+        databaseHelper.getFoodQuantity(foodNumber);
+        databaseHelper.getFoodStorageStatus(foodStatus);
+        databaseHelper.getCosmeticQuantity(cosmeticNumber);
+        databaseHelper.getCosmeticStorageStatus(cosmeticStatus);
+        databaseHelper.getMedicineQuantity(medicineNumber);
+        databaseHelper.getMedicineStorageStatus(medicineStatus);
     }
 
     // MainActivity handles this
