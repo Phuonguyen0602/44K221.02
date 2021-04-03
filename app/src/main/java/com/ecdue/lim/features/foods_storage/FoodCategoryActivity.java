@@ -11,6 +11,8 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 
 import com.ecdue.lim.R;
 import com.ecdue.lim.base.BaseAddProductActivity;
@@ -37,6 +39,22 @@ public class FoodCategoryActivity extends BaseAddProductActivity {
         binding.setLifecycleOwner(this);
 
         initRecyclerView();
+        binding.edtFoodSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                viewModel.searchProduct(s.toString());
+            }
+        });
     }
 
     private void initRecyclerView(){

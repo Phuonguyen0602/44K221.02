@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.ecdue.lim.features.cosmetics_storage.CosmeticCategoryViewModel" />
@@ -62,15 +63,30 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/quicksand_bold"
+            android:visibility="@{viewModel.showSearchBar ? View.INVISIBLE : View.VISIBLE}"
             android:text="@{viewModel.category}"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/img_action_bar"
             app:layout_constraintStart_toEndOf="@+id/btn_food_category_back"
             app:layout_constraintTop_toTopOf="@+id/img_action_bar" />
-
+        <EditText
+            android:id="@+id/edt_food_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/quicksand_bold"
+            android:hint="@string/enter_product_name"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:visibility="@{viewModel.showSearchBar ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/img_action_bar"
+            app:layout_constraintEnd_toEndOf="@+id/btn_food_category_add"
+            app:layout_constraintStart_toEndOf="@+id/btn_food_category_back"
+            app:layout_constraintTop_toTopOf="@+id/img_action_bar" />
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_food_category_add"
+            android:visibility="@{viewModel.showSearchBar ? View.INVISIBLE : View.VISIBLE}"
             android:onClick="@{()->viewModel.onAddItemClicked()}"
             android:background="@drawable/action_bar_add_button_bg"
             android:layout_width="32dp"

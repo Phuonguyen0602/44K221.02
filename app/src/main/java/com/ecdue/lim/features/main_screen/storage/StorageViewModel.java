@@ -48,6 +48,7 @@ public class StorageViewModel extends ViewModel {
 
     }
     public void searchProduct(String name){
+        if (adapter == null) return;
         if (!name.equals("")) {
             ArrayList<Product> searchResults = new ArrayList<>();
             for (Product product : allProducts){

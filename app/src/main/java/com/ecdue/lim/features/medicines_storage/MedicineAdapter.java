@@ -50,6 +50,10 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
         this.products = data;
     }
 
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
+
     public void setViewModel(MedicineCategoryViewModel viewModel) {
         this.viewModel = viewModel;
     }

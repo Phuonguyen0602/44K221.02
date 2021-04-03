@@ -32,6 +32,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         this.viewModel = viewModel;
     }
 
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
+
     public FoodAdapter() {
     }
 

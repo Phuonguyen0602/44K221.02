@@ -17,6 +17,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -52,6 +54,22 @@ public class CosmeticCategoryActivity extends BaseAddProductActivity {
 
         initRecyclerView();
         defaultCategoryOption = 1;
+        binding.edtFoodSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                viewModel.searchProduct(s.toString());
+            }
+        });
     }
     private void initRecyclerView(){
         RecyclerView cosmeticsList = binding.rvCosmetics;

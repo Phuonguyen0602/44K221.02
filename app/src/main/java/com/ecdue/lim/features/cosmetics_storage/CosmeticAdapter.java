@@ -11,14 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ecdue.lim.R;
 import com.ecdue.lim.data.Product;
 import com.ecdue.lim.databinding.CosmeticRowItemBinding;
+import com.ecdue.lim.features.medicines_storage.MedicineAdapter;
 
 import java.util.ArrayList;
 
 public class CosmeticAdapter extends RecyclerView.Adapter<CosmeticAdapter.CosmeticViewHolder> {
     private ArrayList<Product> products;
     private CosmeticCategoryViewModel viewModel;
+
     public void setProducts(ArrayList<Product> products) {
         this.products = products;
+    }
+
+    public ArrayList<Product> getProducts() {
+        return products;
     }
 
     public void setViewModel(CosmeticCategoryViewModel viewModel) {
