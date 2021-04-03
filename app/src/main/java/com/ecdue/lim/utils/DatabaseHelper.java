@@ -3,9 +3,11 @@ package com.ecdue.lim.utils;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -114,6 +116,41 @@ public class DatabaseHelper {
     }
 
     //region getter setter
+    public long getExpThreshold(String category){
+        switch (category){
+            case CATEGORY_FOOD:
+                return foodExpThreshold;
+            case CATEGORY_COSMETIC:
+                return cosmeticExpThreshold;
+            case CATEGORY_MEDICINE:
+                return medicineExpThreshold;
+            default:
+                return 0;
+        }
+    }
+    public long getFoodExpThreshold() {
+        return foodExpThreshold;
+    }
+
+    public void setFoodExpThreshold(long foodExpThreshold) {
+        this.foodExpThreshold = foodExpThreshold;
+    }
+
+    public long getCosmeticExpThreshold() {
+        return cosmeticExpThreshold;
+    }
+
+    public void setCosmeticExpThreshold(long cosmeticExpThreshold) {
+        this.cosmeticExpThreshold = cosmeticExpThreshold;
+    }
+
+    public long getMedicineExpThreshold() {
+        return medicineExpThreshold;
+    }
+
+    public void setMedicineExpThreshold(long medicineExpThreshold) {
+        this.medicineExpThreshold = medicineExpThreshold;
+    }
 
     public FirebaseFirestore getDb() {
         return db;
@@ -390,7 +427,7 @@ public class DatabaseHelper {
                 expiredProducts++;
                 product.setExpired(true);
             }
-            else if (timeLeft > 0 && timeLeft <= DateTimeUtil.dayToMilliSec(expThreshold)) {
+            else if (timeLeft <= DateTimeUtil.dayToMilliSec(expThreshold)) {
                 nearExpProducts++;
                 product.setToBeNotified(true);
             }
@@ -508,4 +545,10 @@ public class DatabaseHelper {
         instance = null;
     }
 
+    public String getUserName() {
+        return auth.getCurrentUser().isAnonymous() ? "Anonymous" : auth.getCurrentUser().getDisplayName();
+    }
+    public Uri getUserPicture(){
+        return auth.getCurrentUser().getPhotoUrl();
+    }
 }

@@ -7,35 +7,212 @@
             name="viewModel"
             type="com.ecdue.lim.features.main_screen.account.AccountViewModel" />
     </data>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".features.main_screen.account.AccountFragment">
 
-    <TextView
-        android:id="@+id/text_dashboard"
-        android:text="Account fragment"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:background="@drawable/background"
+        tools:context=".features.main_screen.account.AccountFragment">
 
-    <Button
-        android:onClick="@{()->viewModel.onSignOutClicked()}"
-        android:id="@+id/button5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="208dp"
-        android:text="Sign out"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/img_account_picture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="88dp"
+            app:layout_constraintBottom_toTopOf="@+id/txt_account_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread"
+            tools:srcCompat="@drawable/anonymous_avt" />
+
+        <TextView
+            android:id="@+id/txt_account_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_bold"
+            android:textColor="@color/teal_700"
+            android:text="@{viewModel.userName}"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_account_picture"
+            tools:text="Nguyen Son" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/textView13"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_account_name">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_account_noti_settings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/top_border_button"
+                android:elevation="1dp"
+                android:translationZ="0dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:paddingStart="40dp"
+                android:paddingEnd="10dp"
+                android:text="@string/notification_settings"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textColor="@color/teal_200"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/btn_account_signout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+            <ImageView
+                android:id="@+id/img_notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:backgroundTint="@color/teal_200"
+                android:elevation="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_account_noti_settings"
+                app:layout_constraintStart_toStartOf="@+id/btn_account_noti_settings"
+                app:layout_constraintTop_toTopOf="@+id/btn_account_noti_settings"
+                app:srcCompat="@drawable/ic_notifications_black_24dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_account_signout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/top_bottom_border_button"
+                android:elevation="1dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:onClick="@{()->viewModel.onSignOutClicked()}"
+                android:paddingStart="40dp"
+                android:paddingEnd="10dp"
+                android:text="@string/sign_out"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textColor="@color/teal_200"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_account_noti_settings" />
+
+
+
+            <ImageView
+                android:id="@+id/img_signout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:backgroundTint="@color/teal_200"
+                android:elevation="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_account_signout"
+                app:layout_constraintStart_toStartOf="@+id/btn_account_signout"
+                app:layout_constraintTop_toTopOf="@+id/btn_account_signout"
+                app:srcCompat="@drawable/ic_baseline_exit_to_app_24" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand"
+            android:text="@string/contact"
+            android:textColor="@color/teal_200"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/guideline4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView13">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_account_facebook"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/top_border_button"
+                android:fontFamily="@font/quicksand_bold"
+                android:paddingStart="40dp"
+                android:paddingEnd="10dp"
+                android:text="@string/contact_via_facebook"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textColor="@color/teal_200"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/btn_account_email"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <ImageView
+                android:id="@+id/img_facebook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:backgroundTint="@color/teal_200"
+                android:elevation="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_account_facebook"
+                app:layout_constraintStart_toStartOf="@+id/btn_account_facebook"
+                app:layout_constraintTop_toTopOf="@+id/btn_account_facebook"
+                app:srcCompat="@drawable/icon_facebook" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_account_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/top_bottom_border_button"
+                android:fontFamily="@font/quicksand_bold"
+                android:paddingStart="40dp"
+                android:paddingEnd="10dp"
+                android:text="@string/app_email"
+                android:textAlignment="textStart"
+                android:textAllCaps="false"
+                android:textColor="@color/teal_200"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_account_facebook" />
+
+            <ImageView
+                android:id="@+id/img_gmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:backgroundTint="@color/teal_200"
+                android:elevation="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_account_email"
+                app:layout_constraintStart_toStartOf="@+id/btn_account_email"
+                app:layout_constraintTop_toTopOf="@+id/btn_account_email"
+                app:srcCompat="@drawable/ic_gmail" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="533dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

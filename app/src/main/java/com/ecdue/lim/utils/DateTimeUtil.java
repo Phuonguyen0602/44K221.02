@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateTimeUtil {
+    public static final String DEFAULT_DATE_FORMAT = "dd/M/yyyy";
     public static String milliSecToString(long milli, String format){
         try {
             return new SimpleDateFormat(format, Locale.US).format(new Date(milli));
@@ -21,7 +22,7 @@ public class DateTimeUtil {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH);
         int year = calendar.get(Calendar.YEAR);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy" , Locale.US);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT, Locale.US);
         try {
             Date date = dateFormat.parse(String.format(Locale.US, "%d/%d/%d", day, month+1, year));
             return date != null ? date.getTime() : 0;

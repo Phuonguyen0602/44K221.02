@@ -65,8 +65,8 @@ public class AddItemFragmentViewModel extends ViewModel {
         // Image url
         product.setBarcode(Barcode);
         Log.d(TAG, "Days left: " + productDayLefts);
-        product.setToBeNotified(productDayLefts <= notifyBoundary);
-        product.setExpired(productDayLefts <= 0);
+        product.setToBeNotified((long)productDayLefts <= DatabaseHelper.getInstance().getExpThreshold(category));
+        product.setExpired(productDayLefts < 0);
         try {
             DatabaseHelper.getInstance().addNewProduct(product);
         } catch (IllegalAccessException e) {

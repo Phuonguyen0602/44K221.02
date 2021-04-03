@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginTop="8dp"
-            android:text="@{`Expire on ` + DateTimeUtil.milliSecToString(product.expire, `dd/M/yyyy`)}"
+            app:expireText="@{product.expire}"
             android:textColor="@{(product.expired || product.toBeNotified) ? @color/red_highlight : @color/green_200}"
             app:layout_constraintBottom_toBottomOf="@+id/img_product_calendar"
             app:layout_constraintStart_toEndOf="@+id/img_product_calendar"
