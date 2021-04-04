@@ -41,7 +41,7 @@ public class AccountFragment extends Fragment {
         if (userPicture != null) {
             Glide.with(this)
                     .load(userPicture)
-                    .apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(128, 0, RoundedCornersTransformation.CornerType.ALL)))
+                    .apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(180, 0, RoundedCornersTransformation.CornerType.ALL)))
                     .into(binding.imgAccountPicture);
         }
         else {

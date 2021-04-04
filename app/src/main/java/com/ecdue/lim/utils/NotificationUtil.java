@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -24,9 +25,10 @@ public class NotificationUtil {
             notificationManager.createNotificationChannel(channel);
         }
     }
-    public static void createNotification(Context context, int iconId, String title, String description,
+    public static void createNotification(Context context,int notificationId, int iconId, String title, String description,
                                           int priority, boolean autoCancel , PendingIntent pendingIntent)
     {
+        Log.d("Notification", "Creating notification id " + notificationId);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
         builder.setSmallIcon(iconId);
         builder.setContentTitle(title);
@@ -38,6 +40,6 @@ public class NotificationUtil {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
 // notificationId is a unique int for each notification that you must define
-        notificationManager.notify(0, builder.build());
+        notificationManager.notify(notificationId, builder.build());
     }
 }

@@ -97,6 +97,7 @@ public class FoodCategoryActivity extends BaseAddProductActivity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         NotificationUtil.createNotification(
                 this,
+                0,
                 R.drawable.app_logo_small,
                 "Expiration date reminder",
                 "Your product will expire on 14/4/2021",

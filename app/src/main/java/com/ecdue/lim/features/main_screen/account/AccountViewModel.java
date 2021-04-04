@@ -5,6 +5,8 @@ import android.net.Uri;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.ecdue.lim.events.OpenFacebookEvent;
+import com.ecdue.lim.events.OpenGmailEvent;
 import com.ecdue.lim.events.SignOutEvent;
 import com.ecdue.lim.utils.DatabaseHelper;
 
@@ -43,11 +45,11 @@ public class AccountViewModel extends ViewModel {
     }
 
     public void onFacebookClicked(){
-
+        EventBus.getDefault().post(new OpenFacebookEvent());
     }
 
     public void onEmailClicked(){
-
+        EventBus.getDefault().post(new OpenGmailEvent());
     }
 
 }

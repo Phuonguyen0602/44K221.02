@@ -1,15 +1,26 @@
 package com.ecdue.lim.features.main_screen.storage;
 
+import android.util.Log;
+import android.view.View;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ecdue.lim.data.Product;
+import com.ecdue.lim.events.PopupMenuClickedEvent;
 import com.ecdue.lim.utils.DatabaseHelper;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 public class StorageViewModel extends ViewModel {
 
@@ -44,8 +55,8 @@ public class StorageViewModel extends ViewModel {
         showLoading.setValue(false);
         return allProducts;
     }
-    public void onMenuButtonClicked(){
-
+    public void onMenuButtonClicked(View view, StorageViewModel viewModel){
+        EventBus.getDefault().post(new PopupMenuClickedEvent(view, viewModel));
     }
     public void searchProduct(String name){
         if (adapter == null) return;
@@ -74,5 +85,50 @@ public class StorageViewModel extends ViewModel {
 
     public void setShowLoading(MutableLiveData<Boolean> showLoading) {
         this.showLoading = showLoading;
+    }
+    public void onDeleteExpiredFoodsClicked(){
+        ArrayList<Integer> deleteIndexList = new ArrayList<>();
+        for (int i = 0; i < adapter.getItemCount(); i++){
+            if (adapter.getProducts().get(i).getCategory().equals(DatabaseHelper.CATEGORY_FOOD) && adapter.getProducts().get(i).isExpired()){
+                deleteIndexList.add(i);
+            }
+        }
+        for (int i = deleteIndexList.size() - 1; i >= 0; i--){
+            adapter.getProducts().remove(deleteIndexList.get(i).intValue());
+            adapter.notifyItemRemoved(deleteIndexList.get(i));
+        }
+        DatabaseHelper.getInstance().deleteExpiredProducts(DatabaseHelper.CATEGORY_FOOD);
+
+    }
+    public void onDeleteExpiredCosmeticsClicked(){
+        ArrayList<Integer> deleteIndexList = new ArrayList<>();
+        for (int i = 0; i < adapter.getItemCount(); i++){
+            if (adapter.getProducts().get(i).getCategory().equals(DatabaseHelper.CATEGORY_COSMETIC) && adapter.getProducts().get(i).isExpired()){
+                deleteIndexList.add(i);
+            }
+        }
+        for (int i = deleteIndexList.size() - 1; i >= 0; i--){
+            adapter.getProducts().remove(deleteIndexList.get(i).intValue());
+            adapter.notifyItemRemoved(deleteIndexList.get(i));
+        }
+        DatabaseHelper.getInstance().deleteExpiredProducts(DatabaseHelper.CATEGORY_COSMETIC);
+    }
+    public void onDeleteExpiredMedicinesClicked(){
+        ArrayList<Integer> deleteIndexList = new ArrayList<>();
+        for (int i = 0; i < adapter.getItemCount(); i++){
+            if (adapter.getProducts().get(i).getCategory().equals(DatabaseHelper.CATEGORY_MEDICINE) && adapter.getProducts().get(i).isExpired()){
+                deleteIndexList.add(i);
+            }
+        }
+        for (int i = deleteIndexList.size() - 1; i >= 0; i--){
+            adapter.getProducts().remove(deleteIndexList.get(i).intValue());
+            adapter.notifyItemRemoved(deleteIndexList.get(i));
+        }
+        DatabaseHelper.getInstance().deleteExpiredProducts(DatabaseHelper.CATEGORY_MEDICINE);
+    }
+    public void onDeleteAllExpiredClick(){
+        onDeleteExpiredFoodsClicked();
+        onDeleteExpiredCosmeticsClicked();
+        onDeleteExpiredMedicinesClicked();
     }
 }

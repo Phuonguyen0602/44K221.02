@@ -11,7 +11,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@{product.category.equals(`Foods`) ? @color/food : product.category.equals(`Cosmetics`) ? @color/cosmetic : @color/medicine}"
         android:background="@drawable/food_row_background"
@@ -78,7 +78,7 @@
             android:layout_marginStart="2dp"
             android:layout_marginTop="8dp"
             app:expireText="@{product.expire}"
-            android:textColor="@{(product.expired || product.toBeNotified) ? @color/red_highlight : @color/green_200}"
+            android:textColor="@{product.expired ? @color/red_highlight : product.toBeNotified ? @color/yellow_warning : @color/green_200}"
             app:layout_constraintBottom_toBottomOf="@+id/img_product_calendar"
             app:layout_constraintStart_toEndOf="@+id/img_product_calendar"
             app:layout_constraintTop_toBottomOf="@+id/txt_product_q"

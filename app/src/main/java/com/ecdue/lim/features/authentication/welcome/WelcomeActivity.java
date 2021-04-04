@@ -86,9 +86,11 @@ public class WelcomeActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSkipSignInOption(SkipSignInButtonClicked message){
         // Called when user clicks "Skip for now" button
+        showLoadingDialog();
         auth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                hideLoadingDialog();
                 if (task.isSuccessful()){
                     loadActivity(MainActivity.class);
                     Log.d(TAG, "Anonymous user id: " + auth.getCurrentUser().getUid());
@@ -105,5 +107,11 @@ public class WelcomeActivity extends BaseActivity {
     private void playAnimationOnClick(View v){
         v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_scale));
         v.startAnimation(AnimationUtils.loadAnimation(this, R.anim.scale_down));
+    }
+    private void showLoadingDialog() {
+        binding.layoutSigninLoading.setVisibility(View.VISIBLE);
+    }
+    private void hideLoadingDialog() {
+        binding.layoutSigninLoading.setVisibility(View.GONE);
     }
 }

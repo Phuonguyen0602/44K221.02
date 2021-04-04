@@ -31,6 +31,9 @@ public class DateTimeUtil {
         }
         return 0;
     }
+    public static int milliSecToDay(long milli){
+        return (new Long(milli / 60 / 60 / 24 / 1000)).intValue();
+    }
     public static long dayToMilliSec(int numberOfDays){
         return numberOfDays * 24 * 60 * 60 * 1000;
     }

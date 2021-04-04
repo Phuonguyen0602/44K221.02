@@ -3,11 +3,9 @@ package com.ecdue.lim.utils;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,11 +34,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.subjects.PublishSubject;
+
 // The instance of this class is stored in static variable so it remains active for the program
 // lifetime, which means the database changes can be detected all the time
 public class DatabaseHelper {
     public static final String TAG = DatabaseHelper.class.getSimpleName();
-    public static final String USER_INFO = "UserInfo";
+    public static final String NOTIFICATION_ID = "notification_id";
     public static final String COSMETIC_THRESHOLD = "cosmetic_threshold";
     public static final String FOOD_THRESHOLD = "food_threshold";
     public static final String MEDICINE_THRESHOLD = "medicine_threshold";
@@ -86,6 +87,7 @@ public class DatabaseHelper {
     private MutableLiveData<String> medicineQuantity = null;
 
     private static int instances;
+    private int notificationId = 0;
     private MutableLiveData<String> foodStatus;
     private MutableLiveData<String> cosmeticStatus;
     private MutableLiveData<String> medicineStatus;
@@ -113,9 +115,40 @@ public class DatabaseHelper {
         medicinesInfoChanges = new ArrayList<>();
         medicines = new ArrayList<>();
 
+        getNotificationId();
     }
 
     //region getter setter
+    private void getNotificationId(){
+        db.collection("users")
+                .document(userUid)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful() && task.getResult() != null){
+                    if (task.getResult().get(NOTIFICATION_ID) != null){
+                        Long temp = new Long((long)task.getResult().get(NOTIFICATION_ID));
+                        notificationId = temp.intValue();
+                    }
+                    else {
+                        HashMap<String, Object> temp = new HashMap<>();
+                        temp.put(NOTIFICATION_ID, notificationId);
+                        db.collection("users")
+                                .document(userUid)
+                                .set(temp, SetOptions.merge());
+                    }
+                }
+            }
+        });
+    }
+    public int getNextNotificationId(){
+        int returnValue = notificationId;
+        notificationId++;
+        db.collection("users")
+                .document(userUid)
+                .update(NOTIFICATION_ID, notificationId);
+        return returnValue;
+    }
     public long getExpThreshold(String category){
         switch (category){
             case CATEGORY_FOOD:
@@ -128,6 +161,7 @@ public class DatabaseHelper {
                 return 0;
         }
     }
+
     public long getFoodExpThreshold() {
         return foodExpThreshold;
     }
@@ -508,7 +542,34 @@ public class DatabaseHelper {
                             Log.d(TAG, "Fail to delete product");
                     }
                 });
+        if (!product.getImageUrl().equals("")) {
+            storageReference.child(product.getImageUrl()).delete();
+        }
     }
+    public void deleteExpiredProducts(String category){
+        PublishSubject<Boolean> publishSubject = PublishSubject.create();
+        ArrayList<Product> listForDelete;
+        switch (category){
+            case CATEGORY_FOOD:
+                listForDelete = foods;
+                break;
+            case CATEGORY_COSMETIC:
+                listForDelete = cosmetics;
+                break;
+            case CATEGORY_MEDICINE:
+                listForDelete = medicines;
+                break;
+            default:
+                listForDelete = new ArrayList<>();
+        }
+        for (Product product : listForDelete){
+            if (product.isExpired()) {
+                deleteProduct(category, product);
+            }
+        }
+        //adapter.notifyDataSetChanged();
+    }
+
     public String uploadImage(Uri image){
         String path = userUid + "/" + Timestamp.now().getSeconds();
         storageReference.child(path).putFile(image).addOnCompleteListener(
@@ -543,6 +604,12 @@ public class DatabaseHelper {
         cosmetics.clear();
         medicines.clear();
         instance = null;
+
+        HashMap<String, Object> temp = new HashMap<>();
+        temp.put(NOTIFICATION_ID, notificationId);
+        db.collection("users")
+                .document(userUid)
+                .set(temp, SetOptions.merge());
     }
 
     public String getUserName() {

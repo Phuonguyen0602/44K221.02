@@ -33,8 +33,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/quicksand_bold"
-            android:textColor="@color/teal_700"
             android:text="@{viewModel.userName}"
+            android:textColor="@color/teal_700"
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
             app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +57,6 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/top_border_button"
                 android:elevation="1dp"
-                android:translationZ="0dp"
                 android:fontFamily="@font/quicksand_bold"
                 android:paddingStart="40dp"
                 android:paddingEnd="10dp"
@@ -66,23 +65,13 @@
                 android:textAllCaps="false"
                 android:textColor="@color/teal_200"
                 android:textSize="20sp"
+                android:translationZ="0dp"
                 app:layout_constraintBottom_toTopOf="@+id/btn_account_signout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.49"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed" />
-            <ImageView
-                android:id="@+id/img_notification"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:backgroundTint="@color/teal_200"
-                android:elevation="2dp"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_account_noti_settings"
-                app:layout_constraintStart_toStartOf="@+id/btn_account_noti_settings"
-                app:layout_constraintTop_toTopOf="@+id/btn_account_noti_settings"
-                app:srcCompat="@drawable/ic_notifications_black_24dp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_account_signout"
@@ -106,20 +95,33 @@
                 app:layout_constraintTop_toBottomOf="@id/btn_account_noti_settings" />
 
 
-
-            <ImageView
-                android:id="@+id/img_signout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:backgroundTint="@color/teal_200"
-                android:elevation="2dp"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_account_signout"
-                app:layout_constraintStart_toStartOf="@+id/btn_account_signout"
-                app:layout_constraintTop_toTopOf="@+id/btn_account_signout"
-                app:srcCompat="@drawable/ic_baseline_exit_to_app_24" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/img_signout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/teal_200"
+            android:elevation="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/constraintLayout2"
+            app:layout_constraintStart_toStartOf="@+id/constraintLayout2"
+            app:layout_constraintTop_toBottomOf="@id/img_notification"
+            app:srcCompat="@drawable/ic_baseline_exit_to_app_24" />
+
+        <ImageView
+            android:id="@+id/img_notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:backgroundTint="@color/teal_200"
+
+            android:elevation="2dp"
+            app:layout_constraintBottom_toTopOf="@+id/img_signout"
+            app:layout_constraintStart_toStartOf="@+id/constraintLayout2"
+            app:layout_constraintTop_toTopOf="@+id/constraintLayout2"
+            app:layout_constraintVertical_chainStyle="spread"
+            app:srcCompat="@drawable/ic_notifications_black_24dp" />
 
         <TextView
             android:id="@+id/textView13"
@@ -145,6 +147,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_account_facebook"
+                android:onClick="@{()->viewModel.onFacebookClicked()}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/top_border_button"
@@ -163,20 +166,10 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed" />
 
-            <ImageView
-                android:id="@+id/img_facebook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:backgroundTint="@color/teal_200"
-                android:elevation="2dp"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_account_facebook"
-                app:layout_constraintStart_toStartOf="@+id/btn_account_facebook"
-                app:layout_constraintTop_toTopOf="@+id/btn_account_facebook"
-                app:srcCompat="@drawable/icon_facebook" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_account_email"
+                android:onClick="@{()->viewModel.onEmailClicked()}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/top_bottom_border_button"
@@ -194,19 +187,35 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_account_facebook" />
 
-            <ImageView
-                android:id="@+id/img_gmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:backgroundTint="@color/teal_200"
-                android:elevation="2dp"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_account_email"
-                app:layout_constraintStart_toStartOf="@+id/btn_account_email"
-                app:layout_constraintTop_toTopOf="@+id/btn_account_email"
-                app:srcCompat="@drawable/ic_gmail" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/img_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="6dp"
+            android:backgroundTint="@color/teal_200"
+            android:elevation="2dp"
+            app:layout_constraintBottom_toTopOf="@id/img_gmail"
+            app:layout_constraintStart_toStartOf="@id/constraintLayout3"
+            app:layout_constraintTop_toTopOf="@+id/constraintLayout3"
+            app:layout_constraintVertical_chainStyle="spread"
+            app:srcCompat="@drawable/icon_facebook" />
+
+        <ImageView
+            android:id="@+id/img_gmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/teal_200"
+            android:elevation="2dp"
+            app:layout_constraintBottom_toBottomOf="@id/constraintLayout3"
+            app:layout_constraintStart_toStartOf="@id/constraintLayout3"
+            app:layout_constraintTop_toBottomOf="@id/img_facebook"
+            app:srcCompat="@drawable/ic_gmail" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"

@@ -40,6 +40,9 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.StorageV
         holder.binding.setProduct(products.get(position));
     }
 
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
 
     @Override
     public int getItemCount() {

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/btn_storage_clear_foods"
+        android:title="@string/delete_expired_food"/>
+    <item
+        android:id="@+id/btn_storage_clear_cosmetics"
+        android:title="@string/delete_expired_cosmetic"/>
+    <item
+        android:id="@+id/btn_storage_clear_medicines"
+        android:title="@string/delete_expired_medicine"/>
+    <item
+        android:id="@+id/btn_storage_clear_all"
+        android:title="@string/delete_all_expired"/>
+</menu>

@@ -34,7 +34,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_storage"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/guideline2"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +44,7 @@
             app:layout_constraintTop_toBottomOf="@+id/edt_storage_search" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:onClick="@{()->viewModel.onMenuButtonClicked()}"
+            android:onClick="@{(view)->viewModel.onMenuButtonClicked(view, viewModel)}"
             android:id="@+id/btn_storage_menu"
             android:background="@drawable/menu_button"
             android:layout_width="32dp"

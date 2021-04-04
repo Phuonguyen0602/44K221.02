@@ -70,4 +70,9 @@
     <string name="contact">Contact</string>
     <string name="contact_via_facebook">Find us on Facebook</string>
     <string name="app_email">letitmake.lim@gmail.com</string>
+    <string name="app_facebook">fb://page/108637681299375</string>
+    <string name="delete_all_expired">Delete all expired products</string>
+    <string name="delete_expired_food">Delete expired foods</string>
+    <string name="delete_expired_cosmetic">Delete expired cosmetics</string>
+    <string name="delete_expired_medicine">Delete expired medicines</string>
 </resources>

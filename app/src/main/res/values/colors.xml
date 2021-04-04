@@ -9,6 +9,7 @@
     <color name="green_200">#FF79B543</color>
     <color name="black">#FF000000</color>
     <color name="red_highlight">#FFFB4D3D</color>
+    <color name="yellow_warning">#FF9900</color>
     <color name="white">#FFFFFFFF</color>
     <color name="food">#8AC244</color>
     <color name="cosmetic">#F9B9B7</color>
