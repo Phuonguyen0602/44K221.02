@@ -25,6 +25,7 @@ import com.ecdue.lim.events.PopupMenuClickedEvent;
 import com.ecdue.lim.events.SignOutEvent;
 import com.ecdue.lim.features.authentication.welcome.WelcomeActivity;
 import com.ecdue.lim.utils.AlarmUtil;
+import com.ecdue.lim.utils.DatabaseHelper;
 import com.ecdue.lim.utils.GoogleSignInUtils;
 import com.ecdue.lim.utils.NotificationUtil;
 import com.ecdue.lim.utils.ReminderBroadcast;
@@ -86,9 +87,13 @@ public class MainActivity extends BaseAddProductActivity {
     }
 
     private void signOut(){
+        DatabaseHelper.getInstance().removeAllNotifications();
+        DatabaseHelper.getInstance().setFirstTimeSignIn(true);
+        DatabaseHelper.getInstance().clearData();
         FirebaseAuth.getInstance().signOut();
         googleSignInUtils.getSignInClient().signOut();
         loadActivity(WelcomeActivity.class);
+        //TODO: remove all notifications
     }
     // Event from AccountViewModel
     @Subscribe
@@ -115,7 +120,7 @@ public class MainActivity extends BaseAddProductActivity {
                         event.getViewModel().onDeleteExpiredFoodsClicked();
                         break;
                     case R.id.btn_storage_clear_cosmetics:
-                        AlarmUtil.deleteNotificationAlarm(getContext(), "test1234");
+                        AlarmUtil.deleteNotificationAlarm(getContext(), "test1234e");
                         event.getViewModel().onDeleteExpiredCosmeticsClicked();
                         break;
                     case R.id.btn_storage_clear_medicines:

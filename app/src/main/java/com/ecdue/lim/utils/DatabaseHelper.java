@@ -1,7 +1,9 @@
 package com.ecdue.lim.utils;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+import android.util.proto.ProtoOutputStream;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -81,16 +83,34 @@ public class DatabaseHelper {
     private long foodExpThreshold = DEFAULT_FOOD_THRESHOLD;
     private long cosmeticExpThreshold = DEFAULT_COSMETIC_THRESHOLD;
     private long medicineExpThreshold = DEFAULT_MEDICINE_THRESHOLD;
-
+    private long notificationTimeOfDay = 32400000;
     private MutableLiveData<String> foodQuantity = null;
     private MutableLiveData<String> cosmeticQuantity = null;
     private MutableLiveData<String> medicineQuantity = null;
 
     private static int instances;
     private int notificationId = 0;
+    private boolean firstTimeSignIn = false;
     private MutableLiveData<String> foodStatus;
     private MutableLiveData<String> cosmeticStatus;
     private MutableLiveData<String> medicineStatus;
+    private Context applicationContext;
+
+    public Context getApplicationContext() {
+        return applicationContext;
+    }
+
+    public void setApplicationContext(Context applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
+    public boolean isFirstTimeSignIn() {
+        return firstTimeSignIn;
+    }
+
+    public void setFirstTimeSignIn(boolean firstTimeSignIn) {
+        this.firstTimeSignIn = firstTimeSignIn;
+    }
 
     public static DatabaseHelper getInstance(){
         if (instance == null) {
@@ -99,6 +119,14 @@ public class DatabaseHelper {
         }
         Log.d(TAG, "Instance created so far: " + instances);
         return instance;
+    }
+    public static void initInstance(Context context){
+        if (instance == null) {
+            instance = new DatabaseHelper();
+            instance.setApplicationContext(context);
+            instance.setFirstTimeSignIn(true);
+            instances++;
+        }
     }
     private DatabaseHelper(){
         db = FirebaseFirestore.getInstance();
@@ -117,7 +145,36 @@ public class DatabaseHelper {
 
         getNotificationId();
     }
-
+    private void createProductNotification(Product product){
+        long beforeExp = 0;
+        switch (product.getCategory()){
+            case CATEGORY_FOOD:
+                beforeExp = DateTimeUtil.dayToMilliSec(foodExpThreshold);
+                break;
+            case CATEGORY_COSMETIC:
+                beforeExp = DateTimeUtil.dayToMilliSec(cosmeticExpThreshold);
+                break;
+            case CATEGORY_MEDICINE:
+                beforeExp = DateTimeUtil.dayToMilliSec(medicineExpThreshold);
+                break;
+        }
+        AlarmUtil.registerNotificationAlarm(applicationContext,
+                product,
+                getNextNotificationId(),
+                product.getExpire() - beforeExp
+                );
+    }
+    private void removeProductNotification(Product product){
+        AlarmUtil.deleteNotificationAlarm(applicationContext, "" + product.getAddDate());
+    }
+    public void removeAllNotifications(){
+        for (Product food : foods)
+            removeProductNotification(food);
+        for (Product cosmetic : cosmetics)
+            removeProductNotification(cosmetic);
+        for (Product medicine : medicines)
+            removeProductNotification(medicine);
+    }
     //region getter setter
     private void getNotificationId(){
         db.collection("users")
@@ -343,7 +400,12 @@ public class DatabaseHelper {
                     if (insertIndex < 0)
                         insertIndex = (insertIndex + 1)*-1;
                     foods.add(insertIndex, newProduct);
-
+                    if (firstTimeSignIn) {
+                        createProductNotification(newProduct);
+                        Log.d(TAG, "First time sign in");
+                    }
+                    else
+                        Log.d(TAG, "Not first time sign in");
                     if (foodAdapter != null) foodAdapter.notifyItemInserted(insertIndex);
                     break;
 
@@ -360,6 +422,7 @@ public class DatabaseHelper {
                         break;
                     foods.remove(removeIndex);
                     if (foodAdapter != null) foodAdapter.notifyItemRemoved(removeIndex);
+                    removeProductNotification(removedProduct);
                     break;
             }
         }
@@ -513,6 +576,7 @@ public class DatabaseHelper {
     }
 
     public void addNewProduct(Product product) throws IllegalAccessException {
+        createProductNotification(product);
         db.collection("users")
                 .document(userUid)
                 .collection(product.getCategory())
@@ -528,6 +592,7 @@ public class DatabaseHelper {
         });
     }
     public void deleteProduct(String category, Product product){
+        removeProductNotification(product);
         db.collection("users")
                 .document(userUid)
                 .collection(category)
@@ -618,4 +683,5 @@ public class DatabaseHelper {
     public Uri getUserPicture(){
         return auth.getCurrentUser().getPhotoUrl();
     }
+
 }

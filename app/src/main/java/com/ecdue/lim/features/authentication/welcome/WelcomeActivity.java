@@ -43,6 +43,7 @@ public class WelcomeActivity extends BaseActivity {
         viewModel = new WelcomeViewModel();
         binding.setViewModel(viewModel);
 
+
         auth = FirebaseAuth.getInstance();
         //TODO: Check session (guest or signed in)
         if (getIntent() != null){
@@ -56,13 +57,17 @@ public class WelcomeActivity extends BaseActivity {
     protected void onStart(){
         super.onStart();
         if (auth.getCurrentUser() != null){
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
-        else {
-
+            loadActivity(MainActivity.class);
         }
     }
+
+    @Override
+    protected <T extends Class> void loadActivity(T c) {
+        if (c == MainActivity.class)
+            DatabaseHelper.initInstance(getApplicationContext());
+        super.loadActivity(c);
+    }
+
     @Override
     protected void onStop(){
         super.onStop();

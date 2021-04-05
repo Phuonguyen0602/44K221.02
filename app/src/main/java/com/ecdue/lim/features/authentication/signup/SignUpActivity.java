@@ -26,6 +26,7 @@ import com.ecdue.lim.events.SignInButtonClicked;
 import com.ecdue.lim.events.SignInGoogleClicked;
 import com.ecdue.lim.events.SignUpButtonClicked;
 import com.ecdue.lim.features.authentication.welcome.WelcomeActivity;
+import com.ecdue.lim.utils.DatabaseHelper;
 import com.ecdue.lim.utils.GoogleSignInUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -107,6 +108,14 @@ public class SignUpActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    protected <T extends Class> void loadActivity(T c) {
+        if (c == MainActivity.class)
+            DatabaseHelper.initInstance(getApplicationContext());
+        super.loadActivity(c);
+    }
+
     private void prepareForGoogleSignIn(){
         googleSignInUtils = new GoogleSignInUtils(this, auth);
         googleSignInUtils.initialize();
