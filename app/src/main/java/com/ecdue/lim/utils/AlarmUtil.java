@@ -1,6 +1,7 @@
 package com.ecdue.lim.utils;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -9,9 +10,10 @@ import android.util.Log;
 import com.ecdue.lim.data.Product;
 
 import static android.content.Context.ALARM_SERVICE;
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class AlarmUtil {
-    public static void registerNotificationAlarm(Context context) {
+    public static void createNotificationAlarm(Context context) {
         Intent intent = new Intent(context, ReminderBroadcast.class);
         intent.putExtra(ReminderBroadcast.TITLE, "Expiration date reminder");
         intent.putExtra(ReminderBroadcast.DESCRIPTION, "Hello from the other side");
@@ -24,29 +26,44 @@ public class AlarmUtil {
                 timeClicked + 1000*5,
                 pendingIntent);
     }
-    public static void registerNotificationAlarm(Context context, Product product, int notificationId, long notificationTime) {
+    public static void createNotificationAlarm(Context context, Product product, long notificationTime) {
         Log.d("AlarmManager", "Registering notification for " + product.getName());
         Intent intent = new Intent(context, ReminderBroadcast.class);
-        intent.putExtra(ReminderBroadcast.TITLE, "Expiration date reminder");
-        intent.putExtra(ReminderBroadcast.DESCRIPTION,
-                "" + product.getName() + " will expire in " +
-                        DateTimeUtil.milliSecToDay(product.getExpire() - DateTimeUtil.getCurrentDayTime()) + " day(s)");
-        intent.putExtra(ReminderBroadcast.NOTIFICATION_ID, notificationId);
+        intent.putExtra(ReminderBroadcast.TITLE, "EXP date reminder");
+        intent.putExtra(ReminderBroadcast.DESCRIPTION, getDescription(product));
+        intent.putExtra(ReminderBroadcast.NOTIFICATION_ID, product.getNotificationId());
         intent.setType("" + product.getAddDate());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, product.getNotificationId(), intent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP,
                 notificationTime,
                 pendingIntent);
     }
-    public static void deleteNotificationAlarm(Context context, String alarmId){
-        Log.d("AlarmManager", "Removing notification for " + alarmId);
-        Intent intent1 = new Intent(context, ReminderBroadcast.class);
-        intent1.setType(alarmId);
-        PendingIntent pendingIntent1 = PendingIntent.getBroadcast(context, 0 , intent1, PendingIntent.FLAG_NO_CREATE);
-        AlarmManager alarmManager1 = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-        if (pendingIntent1 != null) {
-            alarmManager1.cancel(pendingIntent1);
+    public static void recreateNotificationAlarm(Context context, Product product, long notificationTime) {
+        deleteNotificationAlarm(context, product);
+        createNotificationAlarm(context, product, notificationTime);
+    }
+    public static String getDescription(Product product){
+        int daysLeft = DateTimeUtil.milliSecToDay(product.getExpire() - DateTimeUtil.getCurrentDayTime());
+        if (daysLeft < 0)
+            return product.getName() + " is already expired";
+        else if (daysLeft == 0)
+            return product.getName() + " is expiring today";
+        else if (daysLeft == 1)
+            return product.getName() + " will expire tomorrow";
+        else
+            return product.getName() + " will expire in " + daysLeft + " days";
+    }
+    public static void deleteNotificationAlarm(Context context, Product product){
+        Log.d("AlarmManager", "Removing notification for " + product.getName());
+        Intent intent = new Intent(context, ReminderBroadcast.class);
+        intent.setType(Long.toString(product.getAddDate()));
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0 , intent, PendingIntent.FLAG_NO_CREATE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        if (pendingIntent != null) {
+            alarmManager.cancel(pendingIntent);
+            notificationManager.cancel(product.getNotificationId());
         }
         else
             Log.d("AlarmManager", "Can't find the PendingIntent");

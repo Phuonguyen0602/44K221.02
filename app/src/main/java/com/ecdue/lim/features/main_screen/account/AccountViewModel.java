@@ -5,9 +5,11 @@ import android.net.Uri;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.ecdue.lim.events.LoadActivityEvent;
 import com.ecdue.lim.events.OpenFacebookEvent;
 import com.ecdue.lim.events.OpenGmailEvent;
 import com.ecdue.lim.events.SignOutEvent;
+import com.ecdue.lim.features.settings.SettingsActivity;
 import com.ecdue.lim.utils.DatabaseHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -41,7 +43,7 @@ public class AccountViewModel extends ViewModel {
     }
 
     public void onNotificationSettingsClicked(){
-
+        EventBus.getDefault().post(new LoadActivityEvent(SettingsActivity.class));
     }
 
     public void onFacebookClicked(){

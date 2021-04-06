@@ -64,8 +64,12 @@
     <string name="choose_one">Choose one</string>
     <string name="add_new">Add new   </string>
     <string name="choose_or_camera">Choose from gallery or take a new picture</string>
-    
+
     <string name="notification_settings">Notification settings</string>
+    <string name="allow_notifications">Allow notifications</string>
+    <string name="notify_before">Notify before the EXP day:</string>
+    <string name="notification_time">Notification time</string>
+    <string name="notify_me_at">Notify me at:</string>
     <string name="sign_out">Sign out</string>
     <string name="contact">Contact</string>
     <string name="contact_via_facebook">Find us on Facebook</string>

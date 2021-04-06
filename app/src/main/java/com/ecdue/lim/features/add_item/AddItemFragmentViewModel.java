@@ -67,6 +67,7 @@ public class AddItemFragmentViewModel extends ViewModel {
         Log.d(TAG, "Days left: " + productDayLefts);
         product.setToBeNotified((long)productDayLefts <= DatabaseHelper.getInstance().getExpThreshold(category));
         product.setExpired(productDayLefts < 0);
+        product.setNotificationId(DatabaseHelper.getInstance().getNextNotificationId());
         try {
             DatabaseHelper.getInstance().addNewProduct(product);
         } catch (IllegalAccessException e) {

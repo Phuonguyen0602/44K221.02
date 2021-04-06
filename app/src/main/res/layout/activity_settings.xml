@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.ecdue.lim.features.settings.SettingsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".features.settings.SettingsActivity">
+
+        <ImageView
+            android:id="@+id/img_action_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/action_bar_background" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_food_category_back"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/round_back_button"
+            android:backgroundTint="@color/white"
+            android:onClick="@{()->viewModel.onBackPressed()}"
+            app:layout_constraintBottom_toBottomOf="@+id/img_action_bar"
+            app:layout_constraintStart_toStartOf="@+id/img_action_bar"
+            app:layout_constraintTop_toTopOf="@+id/img_action_bar" />
+
+        <TextView
+            android:id="@+id/txt_food_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/quicksand_bold"
+            android:text="@string/notification_settings"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/img_action_bar"
+            app:layout_constraintStart_toEndOf="@+id/btn_food_category_back"
+            app:layout_constraintTop_toTopOf="@+id/img_action_bar" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/textView12"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView12"
+            app:layout_constraintVertical_bias="0.55" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="40dp"
+            android:fontFamily="@font/quicksand"
+            android:text="@string/allow_notifications"
+            android:textColor="@color/teal_200"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_action_bar" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_settings_options"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="32dp"
+            android:visibility="@{viewModel.notificationAllowed ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView12">
+
+            <TextView
+                android:id="@+id/txt_settings_food"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/category_foods"
+                android:textColor="@color/teal_200"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/quicksand"
+                android:text="@string/notify_before"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/txt_settings_food"
+                app:layout_constraintTop_toBottomOf="@+id/txt_settings_food" />
+
+            <TextView
+                android:id="@+id/txt_settings_food_days"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@{viewModel.foodNotification}"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView15"
+                app:layout_constraintStart_toEndOf="@+id/textView15"
+                app:layout_constraintTop_toTopOf="@+id/textView15" />
+
+            <TextView
+                android:id="@+id/txt_settings_cosmetic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@string/category_cosmetics"
+                android:textColor="@color/teal_200"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/quicksand"
+                android:text="@string/notify_before"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/txt_settings_cosmetic"
+                app:layout_constraintTop_toBottomOf="@+id/txt_settings_cosmetic" />
+
+            <TextView
+                android:id="@+id/txt_settings_cosmetic_before"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@{viewModel.cosmeticNotification}"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView18"
+                app:layout_constraintStart_toEndOf="@+id/textView18"
+                app:layout_constraintTop_toTopOf="@+id/textView18" />
+
+            <TextView
+                android:id="@+id/txt_settings_medicine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/category_medicines"
+                android:fontFamily="@font/quicksand_bold"
+                android:textColor="@color/teal_200"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView18" />
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/notify_before"
+                android:fontFamily="@font/quicksand"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/txt_settings_medicine"
+                app:layout_constraintTop_toBottomOf="@+id/txt_settings_medicine" />
+
+            <TextView
+                android:id="@+id/txt_settings_medicine_before"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@{viewModel.medicineNotification}"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView21"
+                app:layout_constraintStart_toEndOf="@+id/textView21"
+                app:layout_constraintTop_toTopOf="@+id/textView21" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_settings_change_food"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/round_edit_button"
+                android:onClick="@{()->viewModel.onChangeFoodNotificationClicked()}"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_settings_food_days"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/txt_settings_food_days" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_settings_change_cosmetic"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/round_edit_button"
+                android:onClick="@{()->viewModel.onChangeCosmeticNotificationClicked()}"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_settings_cosmetic_before"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/txt_settings_cosmetic_before" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_settings_change_medicine"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/round_edit_button"
+                android:onClick="@{()->viewModel.onChangeMedicineNotificationClicked()}"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_settings_medicine_before"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/txt_settings_medicine_before" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_settings_change_medicine2"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/round_edit_button"
+                android:onClick="@{()->viewModel.onChangeNotificationTimeClicked()}"
+                app:layout_constraintBottom_toBottomOf="@+id/textView17"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView17" />
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:textColor="@color/teal_200"
+                android:textSize="18sp"
+                android:text="@string/notification_time"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView21" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/notify_me_at"
+                android:fontFamily="@font/quicksand"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/textView14"
+                app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:fontFamily="@font/quicksand_bold"
+                android:text="@{viewModel.notificationTimeString}"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView16"
+                app:layout_constraintStart_toEndOf="@+id/textView16"
+                app:layout_constraintTop_toTopOf="@+id/textView16" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -38,7 +38,7 @@ public class NotificationUtil {
         builder.setContentIntent(pendingIntent);
         // Pending intent here
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-
+        notificationManager.cancel(notificationId);
 // notificationId is a unique int for each notification that you must define
         notificationManager.notify(notificationId, builder.build());
     }

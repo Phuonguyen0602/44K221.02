@@ -3,7 +3,6 @@ package com.ecdue.lim.utils;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
-import android.util.proto.ProtoOutputStream;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -36,7 +35,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 // The instance of this class is stored in static variable so it remains active for the program
@@ -44,6 +42,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 public class DatabaseHelper {
     public static final String TAG = DatabaseHelper.class.getSimpleName();
     public static final String NOTIFICATION_ID = "notification_id";
+    public static final String NOTIFICATION_TIME = "notification_time";
     public static final String COSMETIC_THRESHOLD = "cosmetic_threshold";
     public static final String FOOD_THRESHOLD = "food_threshold";
     public static final String MEDICINE_THRESHOLD = "medicine_threshold";
@@ -111,7 +110,6 @@ public class DatabaseHelper {
     public void setFirstTimeSignIn(boolean firstTimeSignIn) {
         this.firstTimeSignIn = firstTimeSignIn;
     }
-
     public static DatabaseHelper getInstance(){
         if (instance == null) {
             instance = new DatabaseHelper();
@@ -125,13 +123,40 @@ public class DatabaseHelper {
             instance = new DatabaseHelper();
             instance.setApplicationContext(context);
             instance.setFirstTimeSignIn(true);
+            instance.initialize();
             instances++;
         }
     }
+
+    private void initialize() {
+        db.collection("users")
+                .document(userUid)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.getResult().get(NOTIFICATION_TIME) != null){
+                    notificationTimeOfDay = (long)task.getResult().get(NOTIFICATION_TIME);
+                }
+                else {
+                    HashMap<String, Long> temp = new HashMap<>();
+                    temp.put(NOTIFICATION_TIME, notificationTimeOfDay);
+                    db.collection("users")
+                            .document(userUid)
+                            .set(temp, SetOptions.merge());
+                }
+            }
+        });
+    }
+
+    // Only created after user has authenticated
     private DatabaseHelper(){
         db = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() == null) {
+            instance = null;
+            return;
+        }
         userUid = auth.getCurrentUser().getUid();
 
         foods = new ArrayList<>();
@@ -145,7 +170,9 @@ public class DatabaseHelper {
 
         getNotificationId();
     }
-    private void createProductNotification(Product product){
+    public void createProductNotification(Product product){
+        if (!SharedPreferenceUtil.getAllowNotification(applicationContext))
+            return;
         long beforeExp = 0;
         switch (product.getCategory()){
             case CATEGORY_FOOD:
@@ -158,14 +185,13 @@ public class DatabaseHelper {
                 beforeExp = DateTimeUtil.dayToMilliSec(medicineExpThreshold);
                 break;
         }
-        AlarmUtil.registerNotificationAlarm(applicationContext,
+        AlarmUtil.createNotificationAlarm(applicationContext,
                 product,
-                getNextNotificationId(),
-                product.getExpire() - beforeExp
+                product.getExpire() - beforeExp + notificationTimeOfDay
                 );
     }
-    private void removeProductNotification(Product product){
-        AlarmUtil.deleteNotificationAlarm(applicationContext, "" + product.getAddDate());
+    public void removeProductNotification(Product product){
+        AlarmUtil.deleteNotificationAlarm(applicationContext, product);
     }
     public void removeAllNotifications(){
         for (Product food : foods)
@@ -225,6 +251,11 @@ public class DatabaseHelper {
 
     public void setFoodExpThreshold(long foodExpThreshold) {
         this.foodExpThreshold = foodExpThreshold;
+        HashMap<String, Long> temp = new HashMap<>();
+        temp.put(FOOD_THRESHOLD, foodExpThreshold);
+        db.collection("users")
+                .document(userUid)
+                .set(temp, SetOptions.merge());
     }
 
     public long getCosmeticExpThreshold() {
@@ -233,6 +264,11 @@ public class DatabaseHelper {
 
     public void setCosmeticExpThreshold(long cosmeticExpThreshold) {
         this.cosmeticExpThreshold = cosmeticExpThreshold;
+        HashMap<String, Long> temp = new HashMap<>();
+        temp.put(COSMETIC_THRESHOLD, cosmeticExpThreshold);
+        db.collection("users")
+                .document(userUid)
+                .set(temp, SetOptions.merge());
     }
 
     public long getMedicineExpThreshold() {
@@ -241,6 +277,24 @@ public class DatabaseHelper {
 
     public void setMedicineExpThreshold(long medicineExpThreshold) {
         this.medicineExpThreshold = medicineExpThreshold;
+        HashMap<String, Long> temp = new HashMap<>();
+        temp.put(MEDICINE_THRESHOLD, medicineExpThreshold);
+        db.collection("users")
+                .document(userUid)
+                .set(temp, SetOptions.merge());
+    }
+
+    public long getNotificationTimeOfDay() {
+        return notificationTimeOfDay;
+    }
+
+    public void setNotificationTimeOfDay(long notificationTimeOfDay) {
+        HashMap<String, Long> temp = new HashMap<>();
+        temp.put(NOTIFICATION_TIME, notificationTimeOfDay);
+        this.notificationTimeOfDay = notificationTimeOfDay;
+        db.collection("users")
+                .document(userUid)
+                .set(temp, SetOptions.merge());
     }
 
     public FirebaseFirestore getDb() {

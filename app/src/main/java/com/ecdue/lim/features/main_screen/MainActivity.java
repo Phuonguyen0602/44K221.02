@@ -29,6 +29,7 @@ import com.ecdue.lim.utils.DatabaseHelper;
 import com.ecdue.lim.utils.GoogleSignInUtils;
 import com.ecdue.lim.utils.NotificationUtil;
 import com.ecdue.lim.utils.ReminderBroadcast;
+import com.ecdue.lim.utils.SharedPreferenceUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -90,6 +91,7 @@ public class MainActivity extends BaseAddProductActivity {
         DatabaseHelper.getInstance().removeAllNotifications();
         DatabaseHelper.getInstance().setFirstTimeSignIn(true);
         DatabaseHelper.getInstance().clearData();
+        SharedPreferenceUtil.setAllowNotification(getContext(), true);
         FirebaseAuth.getInstance().signOut();
         googleSignInUtils.getSignInClient().signOut();
         loadActivity(WelcomeActivity.class);
@@ -116,11 +118,9 @@ public class MainActivity extends BaseAddProductActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.btn_storage_clear_foods:
-                        AlarmUtil.registerNotificationAlarm(getContext());
                         event.getViewModel().onDeleteExpiredFoodsClicked();
                         break;
                     case R.id.btn_storage_clear_cosmetics:
-                        AlarmUtil.deleteNotificationAlarm(getContext(), "test1234e");
                         event.getViewModel().onDeleteExpiredCosmeticsClicked();
                         break;
                     case R.id.btn_storage_clear_medicines:

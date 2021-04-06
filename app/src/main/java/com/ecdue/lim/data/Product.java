@@ -34,17 +34,7 @@ public class Product {
     private boolean isExpired;
     private String localImage;
     private String id;
-    public Product(String name, float quantity, String unit, String category, long expire, String imageUrl, String barcode, boolean toBeNotified, boolean isExpired) {
-        this.name = name;
-        this.quantity = quantity;
-        this.unit = unit;
-        this.category = category;
-        this.expire = expire;
-        this.imageUrl = imageUrl;
-        this.barcode = barcode;
-        this.toBeNotified = toBeNotified;
-        this.isExpired = isExpired;
-    }
+    private int notificationId;
 
     public Product(){
         this.name = "";
@@ -59,6 +49,7 @@ public class Product {
         this.toBeNotified = false;
         this.isExpired = false;
         this.id = "";
+        this.notificationId = 0;
     }
 
     public HashMap<String, Object> toHashMap() throws IllegalAccessException {
@@ -80,11 +71,21 @@ public class Product {
         product.setImageUrl((String) map.get("imageUrl"));
         product.setLocalImage(map.get("localImage") == null ? "" : (String) map.get("localImage"));
         product.setBarcode((String) map.get("barcode"));
+        product.setNotificationId(map.get("notificationId") == null ? (int) (Math.random()*1000000) :
+                Long.valueOf((Long) map.get("notificationId")).intValue());
         return product;
     }
     @BindingAdapter("imgRes")
     public static void setImageResource(ImageView view, int resource) {
         view.setImageResource(resource);
+    }
+
+    public int getNotificationId() {
+        return notificationId;
+    }
+
+    public void setNotificationId(int notificationId) {
+        this.notificationId = notificationId;
     }
 
     public String getLocalImage() {

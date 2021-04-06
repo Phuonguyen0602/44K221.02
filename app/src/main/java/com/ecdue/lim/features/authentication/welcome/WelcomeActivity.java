@@ -45,8 +45,8 @@ public class WelcomeActivity extends BaseActivity {
 
 
         auth = FirebaseAuth.getInstance();
-        //TODO: Check session (guest or signed in)
         if (getIntent() != null){
+            // This is executed when user close the app but not sign out
             if (getIntent().getBooleanExtra(SHOULD_FINISH, false)) {
                 DatabaseHelper.getInstance().clearData();
                 finish();
@@ -57,7 +57,10 @@ public class WelcomeActivity extends BaseActivity {
     protected void onStart(){
         super.onStart();
         if (auth.getCurrentUser() != null){
-            loadActivity(MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
+            DatabaseHelper.initInstance(getApplicationContext());
+            DatabaseHelper.getInstance().setFirstTimeSignIn(false);
+            startActivity(intent);
         }
     }
 
