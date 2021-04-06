@@ -30,6 +30,7 @@ public class FoodCategoryActivity extends BaseAddProductActivity {
     private ActivityFoodCategoryBinding binding;
     private FoodCategoryViewModel viewModel;
 
+    public static final String BARCODE = "barcode";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +38,7 @@ public class FoodCategoryActivity extends BaseAddProductActivity {
         viewModel = new ViewModelProvider(this).get(FoodCategoryViewModel.class);
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
+
 
         initRecyclerView();
         binding.edtFoodSearch.addTextChangedListener(new TextWatcher() {
@@ -55,6 +57,13 @@ public class FoodCategoryActivity extends BaseAddProductActivity {
                 viewModel.searchProduct(s.toString());
             }
         });
+        if (getIntent() != null){
+            if (getIntent().getExtras() != null && getIntent().getExtras().getString(BARCODE) != null) {
+                viewModel.getShowSearchBar().setValue(true);
+                binding.edtFoodSearch.setText(getIntent().getExtras().getString(BARCODE));
+                viewModel.searchProduct(getIntent().getExtras().getString(BARCODE));
+            }
+        }
     }
 
     private void initRecyclerView(){

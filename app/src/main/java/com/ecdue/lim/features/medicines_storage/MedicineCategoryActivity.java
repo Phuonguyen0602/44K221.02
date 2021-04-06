@@ -37,6 +37,8 @@ import com.ecdue.lim.utils.DatabaseHelper;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import static com.ecdue.lim.features.foods_storage.FoodCategoryActivity.BARCODE;
+
 public class MedicineCategoryActivity extends BaseAddProductActivity {
     private ActivityMedicineCategoryBinding binding;
     private MedicineCategoryViewModel viewModel;
@@ -67,6 +69,13 @@ public class MedicineCategoryActivity extends BaseAddProductActivity {
                 viewModel.searchProduct(s.toString());
             }
         });
+        if (getIntent() != null){
+            if (getIntent().getExtras() != null && getIntent().getExtras().getString(BARCODE) != null) {
+                viewModel.getShowSearchBar().setValue(true);
+                binding.edtFoodSearch.setText(getIntent().getExtras().getString(BARCODE));
+                viewModel.searchProduct(getIntent().getExtras().getString(BARCODE));
+            }
+        }
     }
     private void initRecyclerView(){
         RecyclerView medicinesList = binding.rvMedicines;

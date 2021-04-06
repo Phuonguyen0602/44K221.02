@@ -41,6 +41,7 @@ import com.ecdue.lim.utils.DatabaseHelper;
 import org.greenrobot.eventbus.Subscribe;
 
 public class CosmeticCategoryActivity extends BaseAddProductActivity {
+    private static final String BARCODE = "barcode";
     private ActivityCosmeticCategoryBinding binding;
     private CosmeticCategoryViewModel viewModel;
 
@@ -70,6 +71,13 @@ public class CosmeticCategoryActivity extends BaseAddProductActivity {
                 viewModel.searchProduct(s.toString());
             }
         });
+        if (getIntent() != null){
+            if (getIntent().getExtras() != null && getIntent().getExtras().getString(BARCODE) != null) {
+                viewModel.getShowSearchBar().setValue(true);
+                binding.edtFoodSearch.setText(getIntent().getExtras().getString(BARCODE));
+                viewModel.searchProduct(getIntent().getExtras().getString(BARCODE));
+            }
+        }
     }
     private void initRecyclerView(){
         RecyclerView cosmeticsList = binding.rvCosmetics;

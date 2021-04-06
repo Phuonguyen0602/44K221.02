@@ -20,25 +20,39 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.MutableLiveData;
 
 import com.bumptech.glide.Glide;
 import com.ecdue.lim.events.LoadImageEvent;
+import com.ecdue.lim.events.ScanBarcodeEvent;
+import com.ecdue.lim.events.SearchByScanBarcodeEvent;
 import com.ecdue.lim.events.ShowAddItemDialog;
 import com.ecdue.lim.events.ShowDatePicker;
 import com.ecdue.lim.events.TakePictureEvent;
 import com.ecdue.lim.features.add_item.AddItemFragment;
+import com.ecdue.lim.features.cosmetics_storage.CosmeticCategoryActivity;
+import com.ecdue.lim.features.foods_storage.FoodCategoryActivity;
+import com.ecdue.lim.features.main_screen.scan.CustomCaptureActivity;
+import com.ecdue.lim.features.medicines_storage.MedicineCategoryActivity;
 import com.ecdue.lim.utils.BitmapUtil;
+import com.ecdue.lim.utils.DatabaseHelper;
 import com.ecdue.lim.utils.PermissionUtil;
 import com.ecdue.lim.utils.SharedPreferenceUtil;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.greenrobot.eventbus.Subscribe;
 
 public abstract class BaseAddProductActivity extends BaseActivity{
+    public static final int SEARCH_BY_BARCODE_SCANNER = 18171;
+    public static final int SCAN_FOR_BARCODE = 18172;
     protected AddItemFragment addItemFragment;
     protected ActivityResultLauncher<Intent> galleryLauncher;
     protected ImageView productImageView;
     protected ActivityResultLauncher<Intent> cameraLauncher;
     protected int defaultCategoryOption = 0;
+    private MutableLiveData<String> tempLiveData;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,6 +154,154 @@ public abstract class BaseAddProductActivity extends BaseActivity{
         startActivity(intent);
     }
 
+    @Subscribe
+    public void onScanBarcodeEvent(ScanBarcodeEvent event){
+        if (PermissionUtil.hasPermission(this, PermissionUtil.CAMERA)) {
+            IntentIntegrator integrator = new IntentIntegrator(this);
+            this.tempLiveData = event.getBarcodeReceiver();
+            integrator.setCaptureActivity(CustomCaptureActivity.class);
+            integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+            integrator.setPrompt("Scan something");
+            integrator.setOrientationLocked(false);
+            integrator.setBeepEnabled(false);
+            integrator.setRequestCode(SCAN_FOR_BARCODE);
+            integrator.initiateScan();
+
+        }
+        else if (ActivityCompat.shouldShowRequestPermissionRationale(this, PermissionUtil.CAMERA) || !SharedPreferenceUtil.getHasRequestCameraBefore(this)) {
+            SharedPreferenceUtil.setHasRequestCameraBefore(this, true);
+            ActivityCompat.requestPermissions(this, PermissionUtil.CAMERA_PERM, PermissionUtil.CAMERA_REQUEST);
+        }
+        else {
+            AlertDialog.Builder cameraPermDialog = new AlertDialog.Builder(this);
+            cameraPermDialog.setTitle("Camera permission denied");
+            cameraPermDialog.setMessage("The camera permission is required scan barcode. Please go to app settings and allow it!");
+            cameraPermDialog.setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    openAppSettings();
+                }
+            });
+            cameraPermDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            cameraPermDialog.show();
+        }
+    }
+
+    @Subscribe
+    public void onSearchByScanBarcodeEvent(SearchByScanBarcodeEvent event){
+        if (PermissionUtil.hasPermission(this, PermissionUtil.CAMERA)) {
+            IntentIntegrator integrator = new IntentIntegrator(this);
+            integrator.setCaptureActivity(CustomCaptureActivity.class);
+            integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+            integrator.setPrompt("Scan something");
+            integrator.setOrientationLocked(false);
+            integrator.setBeepEnabled(false);
+            integrator.setRequestCode(SEARCH_BY_BARCODE_SCANNER);
+            integrator.initiateScan();
+
+        }
+        else if (ActivityCompat.shouldShowRequestPermissionRationale(this, PermissionUtil.CAMERA) || !SharedPreferenceUtil.getHasRequestCameraBefore(this)) {
+            SharedPreferenceUtil.setHasRequestCameraBefore(this, true);
+            ActivityCompat.requestPermissions(this, PermissionUtil.CAMERA_PERM, PermissionUtil.CAMERA_REQUEST);
+        }
+        else {
+            AlertDialog.Builder cameraPermDialog = new AlertDialog.Builder(this);
+            cameraPermDialog.setTitle("Camera permission denied");
+            cameraPermDialog.setMessage("The camera permission is required scan barcode. Please go to app settings and allow it!");
+            cameraPermDialog.setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    openAppSettings();
+                }
+            });
+            cameraPermDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            cameraPermDialog.show();
+        }
+    }
+    protected void loadActivityWithBarcode(Class cl, String barcode){
+        Intent intent = new Intent(this, cl);
+        intent.putExtra(FoodCategoryActivity.BARCODE, barcode);
+        startActivity(intent);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("ScanBarcode", "Request code: " + requestCode);
+        switch (requestCode){
+            case SEARCH_BY_BARCODE_SCANNER:
+                IntentResult result = IntentIntegrator.parseActivityResult(resultCode, data);
+                if(result != null) {
+                    if(result.getContents() == null) {
+                        Log.d("ScanBarcode", "Canceled");
+                    } else {
+                        String barcode = result.getContents();
+                        String searchResult = DatabaseHelper.getInstance().searchProductCategoryWithBarcode(barcode);
+                        if (searchResult == null)
+                            searchResult = "";
+                        switch (searchResult){
+                            case DatabaseHelper.CATEGORY_FOOD:
+                                loadActivityWithBarcode(FoodCategoryActivity.class, barcode);
+                                break;
+                            case DatabaseHelper.CATEGORY_COSMETIC:
+                                loadActivityWithBarcode(CosmeticCategoryActivity.class, barcode);
+                                break;
+                            case DatabaseHelper.CATEGORY_MEDICINE:
+                                loadActivityWithBarcode(MedicineCategoryActivity.class, barcode);
+                                break;
+                            default:
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setMessage("No product found with this barcode!");
+                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                                builder.show();
+                                break;
+                        }
+                    }
+                } else {
+                    super.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
+            case SCAN_FOR_BARCODE:
+                IntentResult result1 = IntentIntegrator.parseActivityResult(resultCode, data);
+                if(result1 != null) {
+                    if(result1.getContents() == null) {
+                        Log.d("ScanBarcode", "Canceled");
+                    } else {
+                        if (result1.getOriginalIntent().getExtras() != null) {
+                            Log.d("ScanBarcode", result1.getContents());
+                            if (tempLiveData != null) {
+                                tempLiveData.setValue(result1.getContents());
+                                tempLiveData.postValue(tempLiveData.getValue());
+                                tempLiveData = null;
+                            }
+                            else
+                                Log.d("ScanBarcode", "LiveData is null");
+                        }
+                    }
+                } else {
+                    super.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                Log.d("ScanBarcode", "No requestcode found");
+                break;
+        }
+
+    }
     @Subscribe
     public void onTakePictureEvent(TakePictureEvent event){
         this.productImageView = event.getImageView();

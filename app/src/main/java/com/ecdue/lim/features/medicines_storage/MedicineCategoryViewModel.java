@@ -79,8 +79,8 @@ public class MedicineCategoryViewModel extends ViewModel {
             ArrayList<Product> searchResults = new ArrayList<>();
             for (Product product : products){
                 String productName = product.getName().toLowerCase();
-                name = name.toLowerCase();
-                if (productName.contains(name))
+                String lowerCaseName = name.toLowerCase();
+                if (productName.contains(lowerCaseName) || (name.equals(product.getBarcode())))
                     searchResults.add(product);
             }
             adapter.setProducts(searchResults);

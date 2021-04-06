@@ -738,4 +738,20 @@ public class DatabaseHelper {
         return auth.getCurrentUser().getPhotoUrl();
     }
 
+    public String searchProductCategoryWithBarcode(String barcode){
+        for (Product food : foods){
+            if (food.getBarcode().equals(barcode))
+                return CATEGORY_FOOD;
+        }
+        for (Product cosmetic : cosmetics){
+            if (cosmetic.getBarcode().equals(barcode)){
+                return CATEGORY_COSMETIC;
+            }
+        }
+        for (Product medicine : medicines){
+            if (medicine.getBarcode().equals(barcode))
+                return CATEGORY_MEDICINE;
+        }
+        return null;
+    }
 }

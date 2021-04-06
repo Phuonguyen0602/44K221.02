@@ -1,6 +1,9 @@
 package com.ecdue.lim.features.main_screen.storage;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -10,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ecdue.lim.R;
 import com.ecdue.lim.data.Product;
 import com.ecdue.lim.databinding.FoodRowItemBinding;
+import com.ecdue.lim.databinding.ProductDetailBinding;
 import com.ecdue.lim.databinding.ProductRowItemBinding;
 import com.ecdue.lim.features.foods_storage.FoodCategoryViewModel;
 
@@ -38,6 +42,27 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.StorageV
     @Override
     public void onBindViewHolder(@NonNull StorageViewHolder holder, int position) {
         holder.binding.setProduct(products.get(position));
+        holder.binding.layoutProductRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                ProductDetailBinding binding = DataBindingUtil.inflate(
+                        LayoutInflater.from(v.getContext()),
+                        R.layout.product_detail,
+                        null,
+                        false
+                );
+                binding.setProduct(products.get(holder.getAdapterPosition()));
+                builder.setView(binding.getRoot());
+                builder.setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            }
+        });
     }
 
     public ArrayList<Product> getProducts() {

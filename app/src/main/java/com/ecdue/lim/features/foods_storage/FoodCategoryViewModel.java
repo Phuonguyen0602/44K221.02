@@ -87,7 +87,7 @@ public class FoodCategoryViewModel extends ViewModel {
             for (Product product : products){
                 String productName = product.getName().toLowerCase();
                 name = name.toLowerCase();
-                if (productName.contains(name))
+                if (productName.contains(name) || (name.equals(product.getBarcode())))
                     searchResults.add(product);
             }
             adapter.setProducts(searchResults);

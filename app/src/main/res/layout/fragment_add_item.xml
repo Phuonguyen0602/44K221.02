@@ -219,10 +219,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:text="@{viewModel.barcode}"
                 android:fontFamily="@font/quicksand"
                 android:inputType="textPersonName"
                 android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
@@ -304,6 +304,16 @@
                 android:layout_height="200dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/img_add_choose_image" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:onClick="@{()->viewModel.onScanBarcodeClicked()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/edt_add_barcode"
+                app:layout_constraintStart_toEndOf="@+id/edt_add_barcode"
+                app:layout_constraintTop_toTopOf="@+id/edt_add_barcode"
+                app:srcCompat="@drawable/ic_baseline_center_focus_weak_24" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

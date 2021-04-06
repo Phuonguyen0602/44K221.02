@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.ecdue.lim.data.Product;
 import com.ecdue.lim.events.LoadImageEvent;
+import com.ecdue.lim.events.ScanBarcodeEvent;
 import com.ecdue.lim.events.ShowDatePicker;
 import com.ecdue.lim.events.TakePictureEvent;
 import com.ecdue.lim.utils.DatabaseHelper;
@@ -29,6 +30,7 @@ public class AddItemFragmentViewModel extends ViewModel {
     private MutableLiveData<String> expirationDate = new MutableLiveData<>("");
     private MutableLiveData<String> daysLeft = new MutableLiveData<>("");
     private MutableLiveData<Bitmap> productImage = new MutableLiveData<>();
+    private MutableLiveData<String> barcode = new MutableLiveData<>("");
     private int notifyBoundary = 3; // Set by user
     private int productDayLefts = 0;
 
@@ -104,7 +106,9 @@ public class AddItemFragmentViewModel extends ViewModel {
     public void onTakePictureClicked(View view){
         EventBus.getDefault().post(new TakePictureEvent((ImageView) view));
     }
-
+    public void onScanBarcodeClicked(){
+        EventBus.getDefault().post(new ScanBarcodeEvent(barcode));
+    }
     public MutableLiveData<String> getExpirationDate() {
         return expirationDate;
     }
@@ -115,6 +119,14 @@ public class AddItemFragmentViewModel extends ViewModel {
 
     public MutableLiveData<Bitmap> getProductImage() {
         return productImage;
+    }
+
+    public MutableLiveData<String> getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(MutableLiveData<String> barcode) {
+        this.barcode = barcode;
     }
 
     public void setProductImage(MutableLiveData<Bitmap> productImage) {

@@ -69,6 +69,7 @@ public class MainActivity extends BaseAddProductActivity {
 
     @Override
     public void onBackPressed() {
+        Log.d(TAG, "On back pressed");
         if (navView.getSelectedItemId() == R.id.navigation_home){
             Intent intent = new Intent(getContext(), WelcomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -34,4 +34,10 @@ public class ScanFragment extends Fragment {
 //        });
         return binding.getRoot();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        scanViewModel.initialize();
+    }
 }
