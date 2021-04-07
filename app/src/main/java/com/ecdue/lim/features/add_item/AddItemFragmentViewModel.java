@@ -77,6 +77,7 @@ public class AddItemFragmentViewModel extends ViewModel {
             e.printStackTrace();
             return false;
         }
+        clearData();
         return true;
     }
     //region Fields validation
@@ -188,5 +189,15 @@ public class AddItemFragmentViewModel extends ViewModel {
         } catch (ParseException e) {
             return false;
         }
+    }
+    public boolean remainDaysValidation(){
+        return productDayLefts > 0;
+    }
+
+    private void clearData(){
+        expirationDate.setValue("");
+        barcode.setValue("");
+        daysLeft.setValue("");
+
     }
 }

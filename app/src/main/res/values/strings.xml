@@ -59,6 +59,7 @@
     <string name="unit">Unit of measurement</string>
     <string name="category">Category</string>
     <string name="expiration_date">Expiration date</string>
+    <string name="added_on">Added on</string>
     <string name="barcode">Barcode</string>
     <string name="product_image">Product image</string>
     <string name="choose_one">Choose one</string>

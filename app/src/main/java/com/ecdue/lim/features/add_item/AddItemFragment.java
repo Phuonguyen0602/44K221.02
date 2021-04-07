@@ -171,6 +171,8 @@ public class AddItemFragment extends DialogFragment {
             binding.edtAddQuantity.setError("Quantity must be a number");
         else if (!viewModel.dateValidation(expDate))
             binding.edtAddExp.setError("Date format must be dd/M/yyyy");
+        else if (!viewModel.remainDaysValidation())
+            binding.edtAddExp.setError("Can't add expired product");
         else {
             return viewModel.addNewItem(productName,
                     quantity,
@@ -195,4 +197,5 @@ public class AddItemFragment extends DialogFragment {
     public void setAddedImageLocation(String addedImageLocation) {
         this.addedImageLocation = addedImageLocation;
     }
+
 }

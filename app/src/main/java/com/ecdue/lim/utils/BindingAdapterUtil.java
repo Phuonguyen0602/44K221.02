@@ -11,6 +11,8 @@ import androidx.databinding.BindingAdapter;
 
 import com.ecdue.lim.data.Product;
 
+import java.util.Locale;
+
 public class BindingAdapterUtil {
     @BindingAdapter("expireText")
     public static void setExpireText(TextView textView, long expire){
@@ -24,6 +26,18 @@ public class BindingAdapterUtil {
         else {
             textView.setText("Expire on " + DateTimeUtil.milliSecToString(expire, DateTimeUtil.DEFAULT_DATE_FORMAT));
         }
+    }
+    @BindingAdapter("quantityText")
+    public static void setQuantityText(TextView textView, Product product){
+        if (product.getQuantity() > 0){
+            if (product.getQuantity() - Math.floor(product.getQuantity()) == 0){
+                textView.setText(String.format(Locale.US, "%d %s", (long)(product.getQuantity()), product.getUnit()));
+            }
+            else
+                textView.setText(String.format(Locale.US, "%s %s", String.valueOf(product.getQuantity()), product.getUnit()));
+        }
+        else
+            textView.setText("unknown");
     }
     @BindingAdapter("imageUrl")
     public static void loadProductImage(ImageView view, Product product){
