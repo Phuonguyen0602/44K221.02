@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "668532460568",
+    "firebase_url": "https://due-lim-default-rtdb.firebaseio.com",
+    "project_id": "due-lim",
+    "storage_bucket": "due-lim.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:668532460568:android:d54c4ce06d41a6372d876d",
+        "android_client_info": {
+          "package_name": "com.ecdue.lim"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "668532460568-qa2hc10d56sai7g9egm07ur6c03mdoa8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ecdue.lim",
+            "certificate_hash": "a01ae3535f697f5af6b92c3ab8f78437df825faf"
+          }
+        },
+        {
+          "client_id": "668532460568-vc1ca8jro9204u10v7f128ssl9cj49ru.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ecdue.lim",
+            "certificate_hash": "a47489d8409396aa00ee7de5c9199f6f3faaf268"
+          }
+        },
+        {
+          "client_id": "668532460568-quq5t0g7rtvh52ker8uhct03v23u0b3q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp5OPgVJh06VTImisKCLYf1UPVg4BI-DQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "668532460568-8bpj1f6n31snc0d8sqht0ovjpamrf1af.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
