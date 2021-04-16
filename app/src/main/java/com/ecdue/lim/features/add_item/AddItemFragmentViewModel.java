@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModel;
 import com.ecdue.lim.data.Product;
 import com.ecdue.lim.events.LoadImageEvent;
 import com.ecdue.lim.events.ScanBarcodeEvent;
-import com.ecdue.lim.events.ShowDatePicker;
+import com.ecdue.lim.events.ShowDatePickerEvent;
 import com.ecdue.lim.events.TakePictureEvent;
 import com.ecdue.lim.utils.DatabaseHelper;
 
@@ -99,7 +99,7 @@ public class AddItemFragmentViewModel extends ViewModel {
     //endregion
 
     public void onEdtDateClicked(){
-        EventBus.getDefault().post(new ShowDatePicker(""));
+        EventBus.getDefault().post(new ShowDatePickerEvent(""));
     }
     public void onChoosePictureClicked(View view){
         EventBus.getDefault().post(new LoadImageEvent((ImageView) view));

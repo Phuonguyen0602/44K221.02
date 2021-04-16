@@ -1,8 +1,8 @@
 package com.ecdue.lim.features.authentication.welcome;
 
-import com.ecdue.lim.events.SignInButtonClicked;
-import com.ecdue.lim.events.SignUpButtonClicked;
-import com.ecdue.lim.events.SkipSignInButtonClicked;
+import com.ecdue.lim.events.SignInButtonClickedEvent;
+import com.ecdue.lim.events.SignUpButtonClickedEvent;
+import com.ecdue.lim.events.SkipSignInButtonClickedEvent;
 import com.ecdue.lim.base.BaseViewModel;
 
 import org.greenrobot.eventbus.EventBus;
@@ -14,12 +14,12 @@ public class WelcomeViewModel extends BaseViewModel {
 
     public static final String TAG = WelcomeViewModel.class.getSimpleName();
     public void onSignInClicked(){
-        EventBus.getDefault().post(new SignInButtonClicked(""));
+        EventBus.getDefault().post(new SignInButtonClickedEvent(""));
     }
     public void onSignUpClicked(){
-        EventBus.getDefault().post(new SignUpButtonClicked(""));
+        EventBus.getDefault().post(new SignUpButtonClickedEvent(""));
     }
     public void onSkipClicked() {
-        EventBus.getDefault().post(new SkipSignInButtonClicked(""));
+        EventBus.getDefault().post(new SkipSignInButtonClickedEvent(""));
     }
 }

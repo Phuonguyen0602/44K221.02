@@ -21,10 +21,10 @@ import com.ecdue.lim.base.BaseActivity;
 import com.ecdue.lim.features.main_screen.MainActivity;
 import com.ecdue.lim.features.authentication.signin.SignInActivity;
 import com.ecdue.lim.databinding.ActivitySignUpBinding;
-import com.ecdue.lim.events.BackButtonClicked;
-import com.ecdue.lim.events.SignInButtonClicked;
-import com.ecdue.lim.events.SignInGoogleClicked;
-import com.ecdue.lim.events.SignUpButtonClicked;
+import com.ecdue.lim.events.BackButtonClickedEvent;
+import com.ecdue.lim.events.SignInButtonClickedEvent;
+import com.ecdue.lim.events.SignInGoogleClickedEvent;
+import com.ecdue.lim.events.SignUpButtonClickedEvent;
 import com.ecdue.lim.features.authentication.welcome.WelcomeActivity;
 import com.ecdue.lim.utils.DatabaseHelper;
 import com.ecdue.lim.utils.GoogleSignInUtils;
@@ -164,17 +164,17 @@ public class SignUpActivity extends BaseActivity {
 
     //region Event handling
     @Subscribe
-    public void onBackButtonClicked(BackButtonClicked event){
+    public void onBackButtonClicked(BackButtonClickedEvent event){
         loadActivity(WelcomeActivity.class);
     }
 
     @Subscribe
-    public void onSignInButtonClicked(SignInButtonClicked event){
+    public void onSignInButtonClicked(SignInButtonClickedEvent event){
         loadActivity(SignInActivity.class);
     }
 
     @Subscribe
-    public void onSignUpButtonClicked(SignUpButtonClicked event){
+    public void onSignUpButtonClicked(SignUpButtonClickedEvent event){
         String name = binding.edtSignupName.getText().toString();
         String email = binding.edtSignupEmail.getText().toString();
         String password = binding.edtSignupPassword.getText().toString();
@@ -221,7 +221,7 @@ public class SignUpActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void onSignInGoogleClicked(SignInGoogleClicked event){
+    public void onSignInGoogleClicked(SignInGoogleClickedEvent event){
         googleSignInLauncher.launch(googleSignInUtils.getSignInIntent());
     }
     //endregion

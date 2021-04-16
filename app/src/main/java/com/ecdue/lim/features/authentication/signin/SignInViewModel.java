@@ -4,10 +4,10 @@ import android.util.Patterns;
 
 import androidx.lifecycle.ViewModel;
 
-import com.ecdue.lim.events.BackButtonClicked;
-import com.ecdue.lim.events.SignInButtonClicked;
-import com.ecdue.lim.events.SignInGoogleClicked;
-import com.ecdue.lim.events.SignUpButtonClicked;
+import com.ecdue.lim.events.BackButtonClickedEvent;
+import com.ecdue.lim.events.SignInButtonClickedEvent;
+import com.ecdue.lim.events.SignInGoogleClickedEvent;
+import com.ecdue.lim.events.SignUpButtonClickedEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,15 +32,15 @@ public class SignInViewModel extends ViewModel {
     }
 
     public void onBackPressed(){
-        EventBus.getDefault().post(new BackButtonClicked(""));
+        EventBus.getDefault().post(new BackButtonClickedEvent(""));
     }
     public void onNoAccountPressed() {
-        EventBus.getDefault().post(new SignUpButtonClicked(""));
+        EventBus.getDefault().post(new SignUpButtonClickedEvent(""));
     }
     public void onSignInPressed(){
-        EventBus.getDefault().post(new SignInButtonClicked(""));
+        EventBus.getDefault().post(new SignInButtonClickedEvent(""));
     }
     public void onSignInGoogleClicked(){
-        EventBus.getDefault().post(new SignInGoogleClicked(""));
+        EventBus.getDefault().post(new SignInGoogleClickedEvent(""));
     }
 }

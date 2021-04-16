@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.ecdue.lim.data.Product;
-import com.ecdue.lim.events.BackButtonClicked;
+import com.ecdue.lim.events.BackButtonClickedEvent;
 import com.ecdue.lim.events.ChangeCosmeticNotificationEvent;
 import com.ecdue.lim.events.ChangeFoodNotificationEvent;
 import com.ecdue.lim.events.ChangeMedicineNotificationEvent;
@@ -15,7 +15,6 @@ import com.ecdue.lim.utils.DatabaseHelper;
 import com.ecdue.lim.utils.DateTimeUtil;
 
 import org.greenrobot.eventbus.EventBus;
-import org.w3c.dom.ProcessingInstruction;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -32,7 +31,7 @@ public class SettingsViewModel extends ViewModel {
     private MutableLiveData<String> medicineNotification = new MutableLiveData<>("");
     private MutableLiveData<String> notificationTimeString = new MutableLiveData<>("");
     public void onBackPressed(){
-        EventBus.getDefault().post(new BackButtonClicked(""));
+        EventBus.getDefault().post(new BackButtonClickedEvent(""));
     }
 
 

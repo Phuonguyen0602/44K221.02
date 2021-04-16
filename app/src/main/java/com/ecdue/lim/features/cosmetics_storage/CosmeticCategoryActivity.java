@@ -1,10 +1,5 @@
 package com.ecdue.lim.features.cosmetics_storage;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,31 +7,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.ecdue.lim.R;
-import com.ecdue.lim.base.BaseActivity;
 import com.ecdue.lim.base.BaseAddProductActivity;
 import com.ecdue.lim.databinding.ActivityCosmeticCategoryBinding;
-import com.ecdue.lim.events.BackButtonClicked;
-import com.ecdue.lim.events.LoadImageEvent;
-import com.ecdue.lim.events.ShowAddItemDialog;
+import com.ecdue.lim.events.BackButtonClickedEvent;
 import com.ecdue.lim.events.ShowConfirmDeleteEvent;
-import com.ecdue.lim.events.ShowDatePicker;
-import com.ecdue.lim.features.add_item.AddItemFragment;
-import com.ecdue.lim.features.foods_storage.FoodAdapter;
-import com.ecdue.lim.features.foods_storage.FoodCategoryActivity;
-import com.ecdue.lim.features.foods_storage.FoodCategoryViewModel;
-import com.ecdue.lim.utils.DatabaseHelper;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -107,7 +86,7 @@ public class CosmeticCategoryActivity extends BaseAddProductActivity {
         builder.show();
     }
     @Subscribe
-    public void onBackButtonClicked(BackButtonClicked event){
+    public void onBackButtonClicked(BackButtonClickedEvent event){
         finish();
     }
 }

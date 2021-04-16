@@ -1,10 +1,10 @@
-package com.ecdue.lim.features.main_screen;
+package com.ecdue.lim.features.main_screen.home;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
-import com.ecdue.lim.events.ShowAddItemDialog;
+import com.ecdue.lim.events.ShowAddItemDialogEvent;
 import com.ecdue.lim.features.cosmetics_storage.CosmeticCategoryActivity;
 import com.ecdue.lim.features.foods_storage.FoodCategoryActivity;
 import com.ecdue.lim.events.LoadActivityEvent;
@@ -52,7 +52,7 @@ public class HomeViewModel extends ViewModel {
         EventBus.getDefault().post(new LoadActivityEvent(MedicineCategoryActivity.class));
     }
     public void onAddProductClicked(){
-        EventBus.getDefault().post(new ShowAddItemDialog(""));
+        EventBus.getDefault().post(new ShowAddItemDialogEvent(""));
     }
     //region getter setter
     public MutableLiveData<String> getFoodNumber() {

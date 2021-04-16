@@ -6,10 +6,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.ecdue.lim.data.Product;
-import com.ecdue.lim.events.BackButtonClicked;
-import com.ecdue.lim.events.ShowAddItemDialog;
+import com.ecdue.lim.events.BackButtonClickedEvent;
+import com.ecdue.lim.events.ShowAddItemDialogEvent;
 import com.ecdue.lim.events.ShowConfirmDeleteEvent;
-import com.ecdue.lim.features.foods_storage.FoodAdapter;
 import com.ecdue.lim.utils.DatabaseHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -26,7 +25,7 @@ public class CosmeticCategoryViewModel extends ViewModel {
 
     }
     public void onAddItemClicked(){
-        EventBus.getDefault().post(new ShowAddItemDialog(""));
+        EventBus.getDefault().post(new ShowAddItemDialogEvent(""));
     }
 
     public ArrayList<Product> getData(CosmeticAdapter adapter){
@@ -48,7 +47,7 @@ public class CosmeticCategoryViewModel extends ViewModel {
 
     public void onBackPressed(){
         if (!showSearchBar.getValue())
-            EventBus.getDefault().post(new BackButtonClicked(""));
+            EventBus.getDefault().post(new BackButtonClickedEvent(""));
         else {
             showSearchBar.setValue(false);
             searchProduct("");

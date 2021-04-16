@@ -17,7 +17,7 @@ import android.text.TextWatcher;
 import com.ecdue.lim.R;
 import com.ecdue.lim.base.BaseAddProductActivity;
 import com.ecdue.lim.databinding.ActivityFoodCategoryBinding;
-import com.ecdue.lim.events.BackButtonClicked;
+import com.ecdue.lim.events.BackButtonClickedEvent;
 import com.ecdue.lim.events.CreateNotificationEvent;
 import com.ecdue.lim.events.ShowConfirmDeleteEvent;
 import com.ecdue.lim.features.authentication.welcome.WelcomeActivity;
@@ -95,7 +95,7 @@ public class FoodCategoryActivity extends BaseAddProductActivity {
         builder.show();
     }
     @Subscribe
-    public void onBackButtonClicked(BackButtonClicked event){
+    public void onBackButtonClicked(BackButtonClickedEvent event){
         finish();
     }
 

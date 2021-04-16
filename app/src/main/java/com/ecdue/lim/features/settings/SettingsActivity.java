@@ -1,15 +1,12 @@
 package com.ecdue.lim.features.settings;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -19,7 +16,7 @@ import android.widget.TimePicker;
 import com.ecdue.lim.R;
 import com.ecdue.lim.base.BaseActivity;
 import com.ecdue.lim.databinding.ActivitySettingsBinding;
-import com.ecdue.lim.events.BackButtonClicked;
+import com.ecdue.lim.events.BackButtonClickedEvent;
 import com.ecdue.lim.events.ChangeCosmeticNotificationEvent;
 import com.ecdue.lim.events.ChangeFoodNotificationEvent;
 import com.ecdue.lim.events.ChangeMedicineNotificationEvent;
@@ -63,7 +60,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void onBackPressedEvent(BackButtonClicked event){
+    public void onBackPressedEvent(BackButtonClickedEvent event){
         onBackPressed();
     }
 

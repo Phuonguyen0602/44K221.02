@@ -26,8 +26,8 @@ import com.bumptech.glide.Glide;
 import com.ecdue.lim.events.LoadImageEvent;
 import com.ecdue.lim.events.ScanBarcodeEvent;
 import com.ecdue.lim.events.SearchByScanBarcodeEvent;
-import com.ecdue.lim.events.ShowAddItemDialog;
-import com.ecdue.lim.events.ShowDatePicker;
+import com.ecdue.lim.events.ShowAddItemDialogEvent;
+import com.ecdue.lim.events.ShowDatePickerEvent;
 import com.ecdue.lim.events.TakePictureEvent;
 import com.ecdue.lim.features.add_item.AddItemFragment;
 import com.ecdue.lim.features.cosmetics_storage.CosmeticCategoryActivity;
@@ -104,13 +104,13 @@ public abstract class BaseAddProductActivity extends BaseActivity{
                 });
     }
     @Subscribe
-    public void onShowAddItemDialog(ShowAddItemDialog event){
+    public void onShowAddItemDialog(ShowAddItemDialogEvent event){
         addItemFragment = AddItemFragment.newInstance();
         addItemFragment.setDefaultCategory(defaultCategoryOption);
         addItemFragment.show(getSupportFragmentManager(), "");
     }
     @Subscribe
-    public void onShowDatePicker(ShowDatePicker event){
+    public void onShowDatePicker(ShowDatePickerEvent event){
         if (addItemFragment.isResumed())
             addItemFragment.showDatePickerDialog();
     }

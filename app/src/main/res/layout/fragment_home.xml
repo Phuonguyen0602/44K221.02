@@ -5,13 +5,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.ecdue.lim.features.main_screen.HomeViewModel" />
+            type="com.ecdue.lim.features.main_screen.home.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".features.main_screen.HomeFragment">
+        tools:context=".features.main_screen.home.HomeFragment">
 
         <ImageView
 

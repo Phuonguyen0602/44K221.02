@@ -1,4 +1,4 @@
-package com.ecdue.lim.features.main_screen;
+package com.ecdue.lim.features.main_screen.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

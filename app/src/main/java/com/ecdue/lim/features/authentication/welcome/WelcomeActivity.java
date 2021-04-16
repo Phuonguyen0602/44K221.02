@@ -16,9 +16,9 @@ import com.ecdue.lim.features.main_screen.MainActivity;
 import com.ecdue.lim.features.authentication.signin.SignInActivity;
 import com.ecdue.lim.features.authentication.signup.SignUpActivity;
 import com.ecdue.lim.databinding.ActivityWelcomeBinding;
-import com.ecdue.lim.events.SignInButtonClicked;
-import com.ecdue.lim.events.SignUpButtonClicked;
-import com.ecdue.lim.events.SkipSignInButtonClicked;
+import com.ecdue.lim.events.SignInButtonClickedEvent;
+import com.ecdue.lim.events.SignUpButtonClickedEvent;
+import com.ecdue.lim.events.SkipSignInButtonClickedEvent;
 import com.ecdue.lim.utils.DatabaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -80,19 +80,19 @@ public class WelcomeActivity extends BaseActivity {
 
     //region Event handling
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSignInOption(SignInButtonClicked message){
+    public void onSignInOption(SignInButtonClickedEvent message){
         // Called when user clicks "Sign in" button
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSignUpOption(SignUpButtonClicked message){
+    public void onSignUpOption(SignUpButtonClickedEvent message){
         // Called when user clicks "Sign up" button
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSkipSignInOption(SkipSignInButtonClicked message){
+    public void onSkipSignInOption(SkipSignInButtonClickedEvent message){
         // Called when user clicks "Skip for now" button
         showLoadingDialog();
         auth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {

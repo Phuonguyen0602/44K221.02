@@ -17,10 +17,10 @@ import com.ecdue.lim.R;
 import com.ecdue.lim.base.BaseActivity;
 import com.ecdue.lim.features.main_screen.MainActivity;
 import com.ecdue.lim.databinding.ActivitySignInBinding;
-import com.ecdue.lim.events.BackButtonClicked;
-import com.ecdue.lim.events.SignInButtonClicked;
-import com.ecdue.lim.events.SignInGoogleClicked;
-import com.ecdue.lim.events.SignUpButtonClicked;
+import com.ecdue.lim.events.BackButtonClickedEvent;
+import com.ecdue.lim.events.SignInButtonClickedEvent;
+import com.ecdue.lim.events.SignInGoogleClickedEvent;
+import com.ecdue.lim.events.SignUpButtonClickedEvent;
 import com.ecdue.lim.features.authentication.signup.SignUpActivity;
 import com.ecdue.lim.features.authentication.welcome.WelcomeActivity;
 import com.ecdue.lim.utils.DatabaseHelper;
@@ -112,21 +112,21 @@ public class SignInActivity extends BaseActivity {
 
     //region Event handling
     @Subscribe
-    public void onBackButtonClicked(BackButtonClicked event){
+    public void onBackButtonClicked(BackButtonClickedEvent event){
         // Called when user clicks Back button
         Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
     @Subscribe
-    public void onSignUpButtonClicked(SignUpButtonClicked event){
+    public void onSignUpButtonClicked(SignUpButtonClickedEvent event){
         // Called when user clicks "Don't have an account?"
         Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
 
         startActivity(intent);
     }
     @Subscribe
-    public void onSignInButtonClicked(SignInButtonClicked event){
+    public void onSignInButtonClicked(SignInButtonClickedEvent event){
         String email = binding.edtSigninEmail.getText().toString();
         String password = binding.edtSigninPassword.getText().toString();
         if (viewModel.emailValidation(email) == null && viewModel.passwordValidation(password) == null) {
@@ -157,7 +157,7 @@ public class SignInActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void onSignInGoogleClicked(SignInGoogleClicked event){
+    public void onSignInGoogleClicked(SignInGoogleClickedEvent event){
         Log.d(TAG, "Signing in with Google");
         googleSignInLauncher.launch(googleSignInUtils.getSignInIntent());
     }
